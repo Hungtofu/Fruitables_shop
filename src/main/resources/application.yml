@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: Fruitables_shop
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/fruitables_shop_db
+    username: root
+    password: Vinhhung03#
+  jpa:
+    hibernate:
+      ddl-auto: none

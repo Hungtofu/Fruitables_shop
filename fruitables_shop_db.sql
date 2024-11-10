@@ -6,8 +6,7 @@ create table user(
 	id int auto_increment not null,
     email varchar(255) not null,
     password varchar(255) not null,
-    userName varchar(255),
-    
+    user_name varchar(255),
     
     primary key (id)
 );
@@ -15,21 +14,21 @@ create table user(
 create table delivery_information(
 	id int auto_increment not null,
     user_id int not null,
-    first_name varchar(31) not null,
-    last_name varchar(31) not null,
-    phone_numbers varchar(15) not null,
-    address1 varchar(31) not null,
-    address2 varchar(31) not null,
-	commune varchar(31) not null,
-    district varchar(31) not null,
-    province varchar(31) not null,
+    first_name varchar(65) not null,
+    last_name varchar(65) not null,
+    phone_numbers varchar(65) not null,
+    address1 varchar(65) not null,
+    address2 varchar(65) not null,
+	commune varchar(65) not null,
+    district varchar(65) not null,
+    province varchar(65) not null,
     
 	primary key(id)
 );
 
 create table category(
 	id int auto_increment not null,
-    name varchar(255) not null,
+    name varchar(65) not null,
     
     primary key(id)
 );
@@ -37,8 +36,8 @@ create table category(
 create table product(
 	id int auto_increment not null,
     category_id int not null,
-    name varchar(255) not null,
-	description varchar(255) not null,
+    name varchar(65) not null,
+	description text not null,
     
     primary key(id)
 );
@@ -70,7 +69,7 @@ create table cart_item(
 
 create table payment_type(
 	id int auto_increment not null,
-    name varchar(255),
+    name varchar(65),
     
     primary key(id)
 );
@@ -79,8 +78,8 @@ create table user_payment_method(
 	id int auto_increment not null,
     user_id int not null,
     payment_type_id int not null,
-    provider varchar(255),
-    account_number varchar(255),
+    provider varchar(65),
+    account_number varchar(65),
     expiry_date timestamp,
     is_default boolean not null,
     
@@ -89,7 +88,7 @@ create table user_payment_method(
 
 create table shipping_method(
 	id int auto_increment not null,
-    name varchar(255) not null,
+    name varchar(65) not null,
     price int not null,
     
     primary key(id)
@@ -97,7 +96,7 @@ create table shipping_method(
 
 create table order_status(
 	id int auto_increment not null,
-    status varchar(15),
+    status varchar(65),
     
     primary key(id)
 );
