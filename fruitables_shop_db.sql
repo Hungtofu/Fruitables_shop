@@ -89,7 +89,7 @@ create table user_payment_method(
 create table shipping_method(
 	id int auto_increment not null,
     name varchar(65) not null,
-    price int not null,
+    price decimal not null,
     
     primary key(id)
 );

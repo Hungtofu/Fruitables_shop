@@ -2,8 +2,10 @@ package Fruitables.shop.entity;
 
 import jakarta.persistence.*;
 
-@Entity(name = "payment_type")
-public class PaymentType {
+import java.math.BigDecimal;
+
+@Entity(name = "shipping_method")
+public class ShippingMethod {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,6 +13,9 @@ public class PaymentType {
 
     @Column(name = "name", nullable = false, length = 65)
     private String name;
+
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
 
     public int getId() {
         return id;
@@ -26,5 +31,13 @@ public class PaymentType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

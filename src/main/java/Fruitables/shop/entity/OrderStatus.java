@@ -2,15 +2,15 @@ package Fruitables.shop.entity;
 
 import jakarta.persistence.*;
 
-@Entity(name = "payment_type")
-public class PaymentType {
+@Entity(name = "order_status")
+public class OrderStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name", nullable = false, length = 65)
-    private String name;
+    @Column(name = "status", nullable = false, length = 65)
+    private String status;
 
     public int getId() {
         return id;
@@ -20,11 +20,11 @@ public class PaymentType {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getStatus() {
+        return status;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
