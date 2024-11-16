@@ -13,3 +13,4 @@ spring:
 jwt:
   privateKey: SF8RvR6MqTE+Qf/OwgDL3t9I9DGvtHRt2sQhTxpAFfQ=
   expiration: 86400000  # 1 ngày
+

@@ -155,4 +155,4 @@ alter table shop_order_item add constraint fk_shop_order_item_shop_order_shop_or
 alter table user_review add constraint fk_user_review_user_user_id foreign key (user_id) references user(id);
 alter table user_review add constraint fk_user_review_shop_order_item_ordered_product_id foreign key (ordered_product_id) references shop_order_item(id);
 
-
+select * from user;

@@ -18,6 +18,16 @@ public class User {
     @Column(name = "user_name", length = 255)
     private String userName;
 
+    public User(){
+
+    }
+
+    public User(String email, String password, String userName) {
+        this.email = email;
+        this.password = password;
+        this.userName = userName;
+    }
+
     public int getId() {
         return id;
     }
