@@ -1,16 +1,14 @@
 package Fruitables.shop.service;
 
 import Fruitables.shop.entity.User;
-import Fruitables.shop.payload.Request.SignInRequest;
 import Fruitables.shop.payload.Request.SignUpRequest;
 import Fruitables.shop.repository.UserRepository;
-import Fruitables.shop.service.serviceIMP.LoginServiceIMP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginService implements LoginServiceIMP {
+public class LoginService{
 
     @Autowired
     private UserRepository userRepository;
@@ -18,7 +16,6 @@ public class LoginService implements LoginServiceIMP {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Override
     public boolean addUser(SignUpRequest signUpRequest) {
         User user = userRepository.findByEmail(signUpRequest.getEmail());
         if(user == null){
@@ -37,9 +34,4 @@ public class LoginService implements LoginServiceIMP {
 
     }
 
-    @Override
-    public boolean checkSignIn(SignInRequest signInRequest) {
-        User user = userRepository.findByEmail(signInRequest.getEmail());
-        return passwordEncoder.matches(signInRequest.getPassword(), user.getPassword());
-    }
 }
