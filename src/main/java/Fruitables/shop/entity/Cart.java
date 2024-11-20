@@ -10,7 +10,7 @@ public class Cart {
     private int id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     public int getId() {

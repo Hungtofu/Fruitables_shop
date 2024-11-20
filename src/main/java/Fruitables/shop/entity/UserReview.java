@@ -10,14 +10,14 @@ public class UserReview {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "ordered_product_id", nullable = false)
+    @JoinColumn(name = "ordered_product_id")
     private ShopOrderItem orderProduct;
 
-    @Column(name = "rating_value", nullable = false)
+    @Column(name = "rating_value")
     private int ratingValue;
 
     @Column(name = "comment", columnDefinition = "TEXT")

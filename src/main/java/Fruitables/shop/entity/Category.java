@@ -9,7 +9,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name", nullable = false, length = 65)
+    @Column(name = "name", length = 65)
     private String name;
 
     public int getId() {

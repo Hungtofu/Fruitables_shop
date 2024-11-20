@@ -9,7 +9,7 @@ public class OrderStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "status", nullable = false, length = 65)
+    @Column(name = "status", length = 65)
     private String status;
 
     public int getId() {

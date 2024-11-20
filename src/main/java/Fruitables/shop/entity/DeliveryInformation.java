@@ -13,28 +13,28 @@ public class DeliveryInformation {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "first_name", nullable = false, length = 65)
+    @Column(name = "first_name",length = 65)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 65)
+    @Column(name = "last_name", length = 65)
     private String lastName;
 
-    @Column(name = "phone_numbers", nullable = false, length = 65)
+    @Column(name = "phone_numbers",  length = 65)
     private String phoneNumbers;
 
-    @Column(name = "address1", nullable = false, length = 65)
+    @Column(name = "address1", length = 65)
     private String address1;
 
     @Column(name = "address2", length = 65)
     private String address2;
 
-    @Column(name = "commune", nullable = false, length = 65)
+    @Column(name = "commune", length = 65)
     private String commune;
 
-    @Column(name = "district", nullable = false, length = 65)
+    @Column(name = "district", length = 65)
     private String district;
 
-    @Column(name = "province", nullable = false, length = 65)
+    @Column(name = "province", length = 65)
     private String province;
 
     public Integer getId() {

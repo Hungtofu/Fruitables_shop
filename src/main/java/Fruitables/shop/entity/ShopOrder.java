@@ -13,29 +13,29 @@ public class ShopOrder {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "order_date", nullable = false)
+    @Column(name = "order_date")
     private Timestamp orderDate;
 
     @ManyToOne
-    @JoinColumn(name = "payment_method", nullable = false)
+    @JoinColumn(name = "payment_method")
     private PaymentType paymentMethod;
 
     @ManyToOne
-    @JoinColumn(name = "shipping_address", nullable = false)
+    @JoinColumn(name = "shipping_address")
     private DeliveryInformation shippingAdress;
 
     @ManyToOne
-    @JoinColumn(name = "shipping_method", nullable = false)
+    @JoinColumn(name = "shipping_method")
     private ShippingMethod shippingMethod;
 
-    @Column(name = "order_total", nullable = false)
+    @Column(name = "order_total")
     private BigDecimal orderTotal;
 
     @ManyToOne
-    @JoinColumn(name = "order_status", nullable = false)
+    @JoinColumn(name = "order_status")
     private OrderStatus orderStatus;
 
     public int getId() {

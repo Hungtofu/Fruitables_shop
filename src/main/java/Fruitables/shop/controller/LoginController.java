@@ -1,13 +1,14 @@
 package Fruitables.shop.controller;
 
 
+import Fruitables.shop.dto.UserLoginDTO;
+import Fruitables.shop.entity.User;
 import Fruitables.shop.payload.Request.SignInRequest;
 import Fruitables.shop.payload.Request.SignUpRequest;
-import Fruitables.shop.payload.ResponseData;
-import Fruitables.shop.service.LoginService;
+import Fruitables.shop.payload.RestResponse;
+import Fruitables.shop.service.UserService;
 import Fruitables.shop.util.SecurityUtil;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,38 +23,51 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/login")
 public class LoginController {
 
-    @Autowired
-    private LoginService loginService;
-
-    @Autowired
-    private SecurityUtil securityUtil;
+    private final UserService userService;
+    private final SecurityUtil securityUtil;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public LoginController(SecurityUtil securityUtil, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public LoginController(SecurityUtil securityUtil, UserService userService, SecurityUtil securityUtil1, AuthenticationManagerBuilder authenticationManagerBuilder) {
+        this.userService = userService;
+        this.securityUtil = securityUtil1;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest){
+    public ResponseEntity<RestResponse<Object>> signUp(@RequestBody SignUpRequest signUpRequest){
 
-        ResponseData responseData = new ResponseData();
-        return new ResponseEntity<>(responseData, HttpStatus.OK);
+        RestResponse<Object> response = new RestResponse<Object>();
+        response.setData(userService.addUser(signUpRequest));
+        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@Valid @RequestBody SignInRequest signInRequest){
+    public ResponseEntity<RestResponse<Object>> signIn(@Valid @RequestBody SignInRequest signInRequest){
 
-        ResponseData responseData = new ResponseData();
+        RestResponse<Object> response = new RestResponse<Object>();
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        String token = this.securityUtil.createToken(authentication);
+        String token = this.securityUtil.createAccessToken(authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        responseData.setData(token);
 
-        return new ResponseEntity<>(responseData, HttpStatus.OK);
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
+
+        User user = userService.findByEmail(signInRequest.getEmail());
+        UserLoginDTO.UserInfo currentUserDTO = new UserLoginDTO.UserInfo(
+                user.getId(),
+                user.getUserName(),
+                user.getEmail()
+        );
+
+        userLoginDTO.setAccessToken(token);
+        userLoginDTO.setUser(currentUserDTO);
+
+        response.setData(userLoginDTO);
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
 
 

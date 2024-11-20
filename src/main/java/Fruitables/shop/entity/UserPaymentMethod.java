@@ -16,7 +16,7 @@ public class UserPaymentMethod {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "payment_type_id", nullable = false)
+    @JoinColumn(name = "payment_type_id")
     private PaymentType paymentType;
 
     @Column(name = "provider", length = 65)

@@ -2,7 +2,7 @@ package Fruitables.shop.payload;
 
 public class RestResponse<T> {
 
-    private int statusCode;
+    private int statusCode = 200;
     private String error;
     private Object message;
     private T data;

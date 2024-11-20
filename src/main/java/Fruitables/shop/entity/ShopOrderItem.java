@@ -12,17 +12,17 @@ public class ShopOrderItem {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "product_item_id", nullable = false)
-    private ProductItem productItem;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "shop_order_id", nullable = false)
+    @JoinColumn(name = "shop_order_id")
     private ShopOrder shopOrder;
 
-    @Column(name = "qty", nullable = false)
+    @Column(name = "qty")
     private int qty;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private BigDecimal price;
 
     public int getId() {
@@ -33,12 +33,12 @@ public class ShopOrderItem {
         this.id = id;
     }
 
-    public ProductItem getProductItem() {
-        return productItem;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductItem(ProductItem productItem) {
-        this.productItem = productItem;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public ShopOrder getShopOrder() {

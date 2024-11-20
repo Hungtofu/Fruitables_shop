@@ -1,31 +1,39 @@
-package Fruitables.shop.entity;
+package Fruitables.shop.dto;
 
-import jakarta.persistence.*;
+import Fruitables.shop.entity.Category;
+import Fruitables.shop.entity.Product;
 
 import java.math.BigDecimal;
 
-@Entity(name = "product")
-public class Product {
+public class ProductDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id" )
     private Category category;
-
-    @Column(name = "name", length = 65)
     private String name;
-
-    @Column(name = "qty_in_stock")
     private Long qtyInStock;
-
-    @Column(name = "price")
     private BigDecimal price;
-
-    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    public ProductDTO() {
+    }
+
+    public ProductDTO(int id, Category category, String name, Long qtyInStock, BigDecimal price, String description) {
+        this.id = id;
+        this.category = category;
+        this.name = name;
+        this.qtyInStock = qtyInStock;
+        this.price = price;
+        this.description = description;
+    }
+
+    public ProductDTO(Product product) {
+        this.id = product.getId();
+        this.category = product.getCategory();
+        this.name = product.getName();
+        this.qtyInStock = product.getQtyInStock();
+        this.price = product.getPrice();
+        this.description = product.getDescription();
+    }
 
     public int getId() {
         return id;

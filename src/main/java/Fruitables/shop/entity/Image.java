@@ -2,23 +2,19 @@ package Fruitables.shop.entity;
 
 import jakarta.persistence.*;
 
-@Entity(name = "cart_item")
-public class CartItem {
+@Entity(name = "image")
+public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
-
-    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(name = "qty")
-    private int qty;
+    @Column(name = "url", columnDefinition = "TEXT")
+    private String url;
 
     public int getId() {
         return id;
@@ -26,14 +22,6 @@ public class CartItem {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
     }
 
     public Product getProduct() {
@@ -44,11 +32,11 @@ public class CartItem {
         this.product = product;
     }
 
-    public int getQty() {
-        return qty;
+    public String getUrl() {
+        return url;
     }
 
-    public void setQty(int qty) {
-        this.qty = qty;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
