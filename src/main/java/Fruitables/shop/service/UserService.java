@@ -27,8 +27,7 @@ public class UserService
     }
 
     public boolean addUser(SignUpRequest signUpRequest) {
-        User user = userRepository.findByEmail(signUpRequest.getEmail());
-        if(user == null){
+        if(!userRepository.existsByEmail(signUpRequest.getEmail())){
             try {
                 User newUser = new User(signUpRequest.getEmail(),
                         passwordEncoder.encode(signUpRequest.getPassword()),
@@ -53,6 +52,14 @@ public class UserService
                     u.getEmail()));
         }
         return listUserLoginDTO;
+    }
+
+    public void updateUserToken(String token, String email){
+        User currenUser = this.userRepository.findByEmail(email);
+        if(currenUser != null){
+            currenUser.setRefreshToken(token);
+            this.userRepository.save(currenUser);
+        }
     }
 
 }

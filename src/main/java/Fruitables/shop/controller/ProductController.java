@@ -1,10 +1,17 @@
 package Fruitables.shop.controller;
 
+import Fruitables.shop.entity.Product;
 import Fruitables.shop.payload.RestResponse;
 import Fruitables.shop.service.ProductService;
+import com.turkraft.springfilter.boot.Filter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @CrossOrigin("/*")
 @RestController
@@ -18,9 +25,12 @@ public class ProductController {
     }
 
     @GetMapping("/getall")
-    public ResponseEntity<RestResponse<Object>> getAllProduct(){
+    public ResponseEntity<RestResponse<Object>> getAllProduct(
+            @Filter Specification<Product> spec,
+            Pageable pageable){
+
         RestResponse<Object> response = new RestResponse<Object>();
-        response.setData(productService.getAllProduct());
+        response.setData(productService.getAllProduct(spec, pageable));
         return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
 

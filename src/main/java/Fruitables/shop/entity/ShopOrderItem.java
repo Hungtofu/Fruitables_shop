@@ -1,9 +1,17 @@
 package Fruitables.shop.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "shop_order_item")
 public class ShopOrderItem {
 
@@ -25,43 +33,4 @@ public class ShopOrderItem {
     @Column(name = "price")
     private BigDecimal price;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public ShopOrder getShopOrder() {
-        return shopOrder;
-    }
-
-    public void setShopOrder(ShopOrder shopOrder) {
-        this.shopOrder = shopOrder;
-    }
-
-    public int getQty() {
-        return qty;
-    }
-
-    public void setQty(int qty) {
-        this.qty = qty;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
 }

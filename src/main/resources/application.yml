@@ -9,6 +9,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
 
 jwt:
   base64-secret: MKCiJazbDkyYqgwUmao18FitLPYmvBJ95RJMKdXzN/TDs6FS1npEDwP/9j2lYLZCKZLuxonmK5fR5v59Ik8HzA==

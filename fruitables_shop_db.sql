@@ -8,6 +8,13 @@ create table user(
     password varchar(255),
     user_name varchar(255),
     
+    gender text,
+    refresh_token mediumtext,
+    created_at datetime,
+    update_at datetime,
+    created_by text,
+    update_by text,
+    
     primary key (id)
 );
 

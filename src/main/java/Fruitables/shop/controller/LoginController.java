@@ -9,7 +9,10 @@ import Fruitables.shop.payload.RestResponse;
 import Fruitables.shop.service.UserService;
 import Fruitables.shop.util.SecurityUtil;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,9 +26,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/login")
 public class LoginController {
 
+    @Value("${jwt.refresh-token-validity-in-seconds}")
+    private Long jwtRefreshExpiration;
+
     private final UserService userService;
     private final SecurityUtil securityUtil;
-
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     public LoginController(SecurityUtil securityUtil, UserService userService, SecurityUtil securityUtil1, AuthenticationManagerBuilder authenticationManagerBuilder) {
@@ -44,13 +49,12 @@ public class LoginController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<RestResponse<Object>> signIn(@Valid @RequestBody SignInRequest signInRequest){
+    public ResponseEntity<UserLoginDTO> signIn(@Valid @RequestBody SignInRequest signInRequest){
 
-        RestResponse<Object> response = new RestResponse<Object>();
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        String token = this.securityUtil.createAccessToken(authentication);
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserLoginDTO userLoginDTO = new UserLoginDTO();
@@ -62,12 +66,24 @@ public class LoginController {
                 user.getEmail()
         );
 
+        String token = this.securityUtil.createAccessToken(authentication, currentUserDTO);
+
         userLoginDTO.setAccessToken(token);
         userLoginDTO.setUser(currentUserDTO);
 
-        response.setData(userLoginDTO);
+        String refreshToken = this.securityUtil.createRefreshToken(signInRequest.getEmail(), userLoginDTO);
+        this.userService.updateUserToken(refreshToken, signInRequest.getEmail());
 
-        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
+        ResponseCookie responseCookie = ResponseCookie.from("refresh_token", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(jwtRefreshExpiration)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(userLoginDTO);
     }
 
 
