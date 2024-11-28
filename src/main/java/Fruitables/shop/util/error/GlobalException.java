@@ -8,10 +8,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -20,7 +22,11 @@ public class GlobalException {
 
     @ExceptionHandler(value = {
             UsernameNotFoundException.class,
-            BadCredentialsException.class
+            BadCredentialsException.class,
+            IdInvalidException.class,
+            MissingRequestCookieException.class,
+            IllegalStateException.class,
+            IOException.class
     })
     public ResponseEntity<RestResponse<Object>> handleIdException(Exception e){
         RestResponse<Object> res = new RestResponse<Object>();

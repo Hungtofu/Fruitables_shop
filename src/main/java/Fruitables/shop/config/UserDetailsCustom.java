@@ -1,6 +1,7 @@
-package Fruitables.shop.service;
+package Fruitables.shop.config;
 
 import Fruitables.shop.entity.User;
+import Fruitables.shop.service.UserService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

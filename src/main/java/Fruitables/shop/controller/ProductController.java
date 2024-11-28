@@ -4,6 +4,7 @@ import Fruitables.shop.entity.Product;
 import Fruitables.shop.payload.RestResponse;
 import Fruitables.shop.service.ProductService;
 import com.turkraft.springfilter.boot.Filter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

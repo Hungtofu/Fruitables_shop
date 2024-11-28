@@ -7,7 +7,10 @@ import Fruitables.shop.payload.Request.SignInRequest;
 import Fruitables.shop.payload.Request.SignUpRequest;
 import Fruitables.shop.payload.RestResponse;
 import Fruitables.shop.service.UserService;
+import Fruitables.shop.util.ApiMessage;
 import Fruitables.shop.util.SecurityUtil;
+import Fruitables.shop.util.error.IdInvalidException;
+import jakarta.persistence.Id;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -66,9 +70,9 @@ public class LoginController {
                 user.getEmail()
         );
 
-        String token = this.securityUtil.createAccessToken(authentication, currentUserDTO);
+        String accessToken = this.securityUtil.createAccessToken(signInRequest.getEmail(), currentUserDTO);
 
-        userLoginDTO.setAccessToken(token);
+        userLoginDTO.setAccessToken(accessToken);
         userLoginDTO.setUser(currentUserDTO);
 
         String refreshToken = this.securityUtil.createRefreshToken(signInRequest.getEmail(), userLoginDTO);
@@ -84,6 +88,67 @@ public class LoginController {
         return ResponseEntity.status(HttpStatus.OK.value())
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(userLoginDTO);
+    }
+
+    @GetMapping("/refresh")
+    @ApiMessage("Get user by refresh token")
+    public ResponseEntity<UserLoginDTO> getRefreshToken(@CookieValue(name = "refresh_token") String refreshToken) throws IdInvalidException {
+
+        Jwt decodedToken = this.securityUtil.checkValidRefreshToken(refreshToken);
+        String email = decodedToken.getSubject();
+
+        User currentUser = this.userService.getUserByRefreshTokenAnfEmail(refreshToken, email);
+        if(currentUser == null){
+            throw new IdInvalidException("refresh token invalid");
+        }
+
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
+
+        UserLoginDTO.UserInfo currentUserDTO = new UserLoginDTO.UserInfo(
+                currentUser.getId(),
+                currentUser.getUserName(),
+                currentUser.getEmail()
+        );
+
+        String accessToken = this.securityUtil.createAccessToken(email, currentUserDTO);
+
+        userLoginDTO.setAccessToken(accessToken);
+        userLoginDTO.setUser(currentUserDTO);
+
+        String newRefreshToken = this.securityUtil.createRefreshToken(email, userLoginDTO);
+        this.userService.updateUserToken(newRefreshToken, email);
+
+        ResponseCookie responseCookie = ResponseCookie.from("refresh_token", newRefreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(jwtRefreshExpiration)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(userLoginDTO);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() throws IdInvalidException{
+
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
+        if(email.isEmpty()){
+            throw new IdInvalidException("Invalid access token");
+        }
+
+        this.userService.updateUserToken(null, email);
+        ResponseCookie deleteCookie = ResponseCookie
+                .from("refresh_token", null)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK.value())
+                .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                .body(null);
     }
 
 

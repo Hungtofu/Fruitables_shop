@@ -35,6 +35,13 @@ public class User {
     @Column(name = "gender")
     private GenderEnum gender;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @Column(name = "dob")
+    private Instant dob;
+
+    @Column(name = "img")
+    private String img;
+
     @Column(name = "refresh_token", columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
 

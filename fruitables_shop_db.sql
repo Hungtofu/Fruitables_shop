@@ -9,6 +9,8 @@ create table user(
     user_name varchar(255),
     
     gender text,
+    dob datetime,
+    img text,
     refresh_token mediumtext,
     created_at datetime,
     update_at datetime,
@@ -17,6 +19,7 @@ create table user(
     
     primary key (id)
 );
+
 
 create table delivery_information(
 	id int auto_increment,
@@ -143,7 +146,6 @@ create table user_review(
     
     primary key(id)
 );
-
 
 
 alter table delivery_information add constraint fk_delivery_information_user_user_id foreign key (user_id) references user(id);

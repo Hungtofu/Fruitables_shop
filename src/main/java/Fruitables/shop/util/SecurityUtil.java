@@ -42,14 +42,14 @@ public class SecurityUtil {
         return new SecretKeySpec(keyBytes, 0, keyBytes.length, JWT_ALGORITHM.getName());
     }
 
-    public String createAccessToken(Authentication authentication, UserLoginDTO.UserInfo userInfo){
+    public String createAccessToken(String email, UserLoginDTO.UserInfo userInfo){
         Instant now = Instant.now();
         Instant validity = now.plus(this.jwtAccessExpiration, ChronoUnit.SECONDS);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
-                .subject(authentication.getName())
+                .subject(email)
                 .claim("user", userInfo)
                 .build();
 
@@ -102,6 +102,7 @@ public class SecurityUtil {
             throw e;
         }
     }
+
 
 
 }

@@ -1,18 +1,23 @@
 package Fruitables.shop.controller;
 
+import Fruitables.shop.dto.UserInfoDetail;
 import Fruitables.shop.dto.UserLoginDTO;
 import Fruitables.shop.entity.User;
+import Fruitables.shop.payload.Request.UpdateUserRequest;
 import Fruitables.shop.payload.RestResponse;
 import Fruitables.shop.service.UserService;
 import Fruitables.shop.util.ApiMessage;
+import Fruitables.shop.util.ImgUtil;
 import Fruitables.shop.util.SecurityUtil;
+import Fruitables.shop.util.constant.GenderEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.time.Instant;
 
 @CrossOrigin("*")
 @RestController
@@ -21,6 +26,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ImgUtil imgUtil;
 
     @GetMapping("/getall")
     public ResponseEntity<?> getAllUser(){
@@ -43,6 +51,16 @@ public class UserController {
         }
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(userInfo);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Boolean> updateUser(@RequestPart(name = "userUpdate") UpdateUserRequest updateUserRequest,
+                                              @RequestPart(name = "file") MultipartFile file) throws IOException {
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
+
+        String imgUrl = imgUtil.saveUserImage(email, file);
+        boolean success = this.userService.updateUserInfo(updateUserRequest, email, imgUrl);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(success);
     }
 
 }
