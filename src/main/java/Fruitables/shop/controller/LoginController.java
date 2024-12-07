@@ -25,7 +25,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/login")
 public class LoginController {
@@ -45,11 +44,17 @@ public class LoginController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<RestResponse<Object>> signUp(@RequestBody SignUpRequest signUpRequest){
+    public ResponseEntity<UserLoginDTO.UserInfo> signUp(@RequestBody SignUpRequest signUpRequest){
+        User newUser = userService.addUser(signUpRequest);
+        if(newUser == null){
+            return ResponseEntity.status(HttpStatus.OK.value()).body(null);
+        }
+        UserLoginDTO.UserInfo userInfo = new UserLoginDTO.UserInfo();
+        userInfo.setEmail(newUser.getEmail());
+        userInfo.setUserName(newUser.getUserName());
+        userInfo.setId(newUser.getId());
 
-        RestResponse<Object> response = new RestResponse<Object>();
-        response.setData(userService.addUser(signUpRequest));
-        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(userInfo);
     }
 
     @PostMapping("/signin")
@@ -67,7 +72,8 @@ public class LoginController {
         UserLoginDTO.UserInfo currentUserDTO = new UserLoginDTO.UserInfo(
                 user.getId(),
                 user.getUserName(),
-                user.getEmail()
+                user.getEmail(),
+                user.getImg()
         );
 
         String accessToken = this.securityUtil.createAccessToken(signInRequest.getEmail(), currentUserDTO);
@@ -80,7 +86,8 @@ public class LoginController {
 
         ResponseCookie responseCookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
+                .sameSite("None")
                 .path("/")
                 .maxAge(jwtRefreshExpiration)
                 .build();
@@ -107,7 +114,8 @@ public class LoginController {
         UserLoginDTO.UserInfo currentUserDTO = new UserLoginDTO.UserInfo(
                 currentUser.getId(),
                 currentUser.getUserName(),
-                currentUser.getEmail()
+                currentUser.getEmail(),
+                currentUser.getImg()
         );
 
         String accessToken = this.securityUtil.createAccessToken(email, currentUserDTO);
@@ -120,7 +128,8 @@ public class LoginController {
 
         ResponseCookie responseCookie = ResponseCookie.from("refresh_token", newRefreshToken)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
+                .sameSite("None")
                 .path("/")
                 .maxAge(jwtRefreshExpiration)
                 .build();

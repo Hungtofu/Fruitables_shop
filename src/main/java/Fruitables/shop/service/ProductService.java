@@ -22,6 +22,10 @@ public class ProductService {
         this.productRepo = productRepo;
     }
 
+    public Product getById(int id){
+        return productRepo.findById(id);
+    }
+
     public PageProductDTO getAllProduct(Specification<Product> spec, Pageable pageable){
 
         PageProductDTO pageProductDTO = new PageProductDTO();
@@ -41,7 +45,7 @@ public class ProductService {
         return pageProductDTO;
     }
 
-    public ProductDTO getDetail(Long id){
+    public ProductDTO getDetail(int id){
         Product product = productRepo.findById(id);
         return (product == null)? null : new ProductDTO(product);
     }

@@ -41,6 +41,10 @@ public class UserController {
     @ApiMessage("fetch account")
     public ResponseEntity<UserLoginDTO.UserInfo> getAccount(){
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get(): "";
+        if(email.isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK.value()).body(null);
+        }
+
         User currentUser = userService.findByEmail(email);
 
         UserLoginDTO.UserInfo userInfo = new UserLoginDTO.UserInfo();
@@ -48,6 +52,7 @@ public class UserController {
             userInfo.setId(currentUser.getId());
             userInfo.setUserName(currentUser.getUserName());
             userInfo.setEmail(currentUser.getEmail());
+            userInfo.setImg(currentUser.getImg());
         }
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(userInfo);
@@ -57,6 +62,9 @@ public class UserController {
     public ResponseEntity<Boolean> updateUser(@RequestPart(name = "userUpdate") UpdateUserRequest updateUserRequest,
                                               @RequestPart(name = "file") MultipartFile file) throws IOException {
         String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
+        if(email.isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK.value()).body(null);
+        }
 
         String imgUrl = imgUtil.saveUserImage(email, file);
         boolean success = this.userService.updateUserInfo(updateUserRequest, email, imgUrl);

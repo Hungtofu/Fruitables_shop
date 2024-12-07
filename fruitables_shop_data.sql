@@ -26,8 +26,24 @@ insert into product(category_id, name, qty_in_stock, price, description) values(
 insert into product(category_id, name, qty_in_stock, price, description) values(3, "vietname durian", 10, 32, "this is durian");
 insert into product(category_id, name, qty_in_stock, price, description) values(3, "japan durian", 10, 38, "this is durian");
 
+insert into cart(user_id) values(1);
+
+insert into cart_item(cart_id, product_id, qty) values(1, 1, 2);
+
+insert into image(product_id, url) values(1, "apple.jpg");
+insert into image(product_id, url) values(1, "apple_1.jpg");
+
+use fruitables_shop_db;
+
 select * from user;
 
 select * from category;
 
 select * from product;
+
+select * from image;
+
+select * from cart;
+
+select * from cart_item;
+

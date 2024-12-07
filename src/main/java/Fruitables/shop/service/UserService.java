@@ -38,20 +38,20 @@ public class UserService
 
     }
 
-    public boolean addUser(SignUpRequest signUpRequest) {
+    public User addUser(SignUpRequest signUpRequest) {
         if(!this.userRepository.existsByEmail(signUpRequest.getEmail())){
             try {
                 User newUser = new User(signUpRequest.getEmail(),
                         passwordEncoder.encode(signUpRequest.getPassword()),
                         signUpRequest.getUserName());
                 this.userRepository.save(newUser);
-                return true;
+                return newUser;
             } catch (Exception e){
                 System.out.println("Error add user: + " + e.getMessage());
-                return false;
+                return null;
             }
         }
-        return false;
+        return null;
 
     }
 
@@ -61,7 +61,8 @@ public class UserService
         for(User u : listUser){
             listUserLoginDTO.add(new UserLoginDTO.UserInfo(u.getId(),
                     u.getUserName(),
-                    u.getEmail()));
+                    u.getEmail(),
+                    u.getImg()));
         }
         return listUserLoginDTO;
     }

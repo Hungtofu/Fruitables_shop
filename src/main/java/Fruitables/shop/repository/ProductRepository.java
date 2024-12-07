@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
 
-    Product findById (Long id);
+    Product findById (int id);
 
 
 }

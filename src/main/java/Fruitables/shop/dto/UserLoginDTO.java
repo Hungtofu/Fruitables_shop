@@ -19,9 +19,10 @@ public class UserLoginDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UserInfo{
-        private Long id;
+        private int id;
         private String userName;
         private String email;
+        private String img;
     }
 
 

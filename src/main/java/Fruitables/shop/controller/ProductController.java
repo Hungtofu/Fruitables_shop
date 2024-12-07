@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @PostMapping("/getdetail/{id}")
-    public ResponseEntity<RestResponse<Object>> getDetail(@PathVariable Long id){
+    public ResponseEntity<RestResponse<Object>> getDetail(@PathVariable int id){
         RestResponse<Object> response = new RestResponse<Object>();
         response.setData(productService.getDetail(id));
         return ResponseEntity.status(HttpStatus.OK.value()).body(response);

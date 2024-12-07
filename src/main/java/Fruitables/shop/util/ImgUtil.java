@@ -1,5 +1,8 @@
 package Fruitables.shop.util;
 
+import Fruitables.shop.entity.Product;
+import Fruitables.shop.repository.ImageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,8 +11,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Objects;
 
 @Service
 public class ImgUtil {
@@ -19,6 +20,9 @@ public class ImgUtil {
 
     @Value("${file_up_load.product-image-path}")
     private String productImagePath;
+
+    @Autowired
+    private ImageRepository imageRepo;
 
     public Path init(String sPath) {
 
@@ -51,7 +55,7 @@ public class ImgUtil {
 
         Files.copy(file.getInputStream(), filePath);
 
-        return filePath.toString();
+        return fileName;
     }
 
     public String saveProductImage(String productName, MultipartFile file) throws IOException {
@@ -89,6 +93,10 @@ public class ImgUtil {
             count++;
         }
         return fileName;
+    }
+
+    public String getOneProductImage(Product product){
+        return imageRepo.findFirstByProduct(product).getUrl();
     }
 
 

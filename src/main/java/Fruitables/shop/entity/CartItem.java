@@ -28,4 +28,9 @@ public class CartItem {
     @Column(name = "qty")
     private int qty;
 
+    public CartItem(Cart cart, Product product, int qty) {
+        this.cart = cart;
+        this.product = product;
+        this.qty = qty;
+    }
 }
