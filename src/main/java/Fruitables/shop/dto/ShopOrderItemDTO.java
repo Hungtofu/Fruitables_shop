@@ -16,4 +16,5 @@ public class ShopOrderItemDTO {
     private ProductDTO productDTO;
     private int qty;
     private BigDecimal price;
+    private String image;
 }

@@ -1,5 +1,8 @@
 package Fruitables.shop.service;
 
+import Fruitables.shop.dto.CartItemDTO;
+import Fruitables.shop.dto.ProductDTO;
+import Fruitables.shop.dto.ShopOrderItemDTO;
 import Fruitables.shop.entity.*;
 import Fruitables.shop.repository.ShopOrderItemRepository;
 import Fruitables.shop.repository.ShopOrderRepository;
@@ -7,6 +10,8 @@ import Fruitables.shop.util.ImgUtil;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ShopOrderService {
@@ -42,11 +47,36 @@ public class ShopOrderService {
         ShopOrder shopOrder = initUserShopOrder(email);
         ShopOrderItem shopOrderItem = new ShopOrderItem(shopOrder, product, qty, price);
         try {
-            shopOrderRepository.save(shopOrderItem);
+            shopOrderItemRepository.save(shopOrderItem);
             return true;
         } catch (Exception e) {
             System.out.print("Error save shop order item: "+ e.getMessage());
             return false;
+        }
+    }
+
+    public boolean addCartToUserShopOrder(String email, Cart cart, int qty, BigDecimal price)
+    {
+        ShopOrder shopOrder = initUserShopOrder(email);
+
+    }
+
+    public List<ShopOrderItemDTO> getShopOrderItemByUser(String email)
+    {
+        User user = userService.findByEmail(email);
+        ShopOrder shopOrder = shopOrderRepository.findByUser(user);
+        List<ShopOrderItem> shopOrderItemList = shopOrderItemRepository.findByShopOrder(shopOrder);
+
+        List<ShopOrderItemDTO> shopOrderItemDTOList = new ArrayList<>();
+        for (ShopOrderItem s : shopOrderItemList)
+        {
+            ShopOrderItemDTO shopOrderItemDTO = new ShopOrderItemDTO();
+            shopOrderItemDTO.setId(s.getId);
+            shopOrderItemDTO.setQty(s.getQty);
+            shopOrderItemDTO.setProductDTO(new ProductDTO(s.getProduct()));
+            shopOrderItemDTO.setPrice(s.getPrice);
+            shopOrderItemDTOList.add(shopOrderItemDTO);
+            shopOrderItemDTO.setImage(imgUtil.getOneProductImage(s.getProduct()));
         }
     }
 }
