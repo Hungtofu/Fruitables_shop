@@ -104,8 +104,7 @@
                   <a href="cart.html" class="dropdown-item">Cart</a>
                   <a href="chackout.html" class="dropdown-item">Chackout</a>
                   <a href="testimonial.html" class="dropdown-item"
-                    >Testimonial</a
-                  >
+                    >Testimonial</a>
                   <a href="404.html" class="dropdown-item">404 Page</a>
                 </div>
               </div>
@@ -182,7 +181,8 @@
 
     <!-- Login Form Start -->
     <!-- Pills navs -->
-    <div class="w-50 mx-auto" style="margin-top: 225px;">
+    <div class="w-50 mx-auto" style="margin-top: 225px; border-radius: 10px; padding: 15px; background-color: #fafcfc; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+      <h2 class="form-title">Sign Up</h2>
         <form id="signup_form">
           <div class="text-center mb-3">
             <p>Sign up with:</p>
@@ -207,28 +207,26 @@
 
           <!-- Username input -->
           <div data-mdb-input-init class="form-outline mb-4">
-            <input type="text" id="registerUsername" class="form-control" />
             <label class="form-label" for="registerUsername">Username</label>
+            <input type="text" id="registerUsername" class="form-control" />
           </div>
 
           <!-- Email input -->
           <div data-mdb-input-init class="form-outline mb-4">
-            <input type="email" id="registerEmail" class="form-control" />
             <label class="form-label" for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" class="form-control" />
           </div>
 
           <!-- Password input -->
           <div data-mdb-input-init class="form-outline mb-4">
-            <input type="password" id="registerPassword" class="form-control"/>
             <label class="form-label" for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" class="form-control"/>
           </div>
 
           <!-- Repeat Password input -->
           <div data-mdb-input-init class="form-outline mb-4">
+            <label class="form-label" for="registerRepeatPassword">Repeat password</label>
             <input type="password" id="registerRepeatPassword" class="form-control"/>
-            <label class="form-label" for="registerRepeatPassword"
-              >Repeat password</label
-            >
           </div>
 
           <!-- Checkbox -->
@@ -247,10 +245,13 @@
           </div>
 
           <!-- Submit button -->
-          <button type="submit" class="btn btn-primary btn-block mb-3">
-            Sign up
-          </button>
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary btn-block mb-3">
+              Sign up
+            </button>
+          </div>
           <!-- Register buttons -->
+
           <div class="text-center">
               <p>Already have account? <a href="./signin.html">Sign In</a></p>
           </div>

@@ -181,7 +181,8 @@
 
     <!-- Login Form Start -->
     <!-- Pills navs -->
-    <div class="w-50 mx-auto" style="margin-top: 200px;">
+    <div class="w-50 mx-auto" style="margin-top: 200px; border-radius: 10px; padding: 15px; background-color: #fafcfc; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+      <h2 class="form-title">Sign In</h2>
       <div
         class="tab-pane fade show active"
         id="pills-login"
@@ -232,16 +233,15 @@
 
           <!-- Email input -->
           <div data-mdb-input-init class="form-outline mb-4">
+            <label class="form-label" for="loginEmail">Email</label>
             <input type="email" id="loginEmail" class="form-control" />
-            <label class="form-label" for="loginEmail"
-              >Email</label
-            >
+
           </div>
 
           <!-- Password input -->
           <div data-mdb-input-init class="form-outline mb-4">
-            <input type="password" id="loginPassword" class="form-control" />
             <label class="form-label" for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" class="form-control" />
           </div>
 
           <!-- 2 column grid layout -->
@@ -269,12 +269,15 @@
           </div>
 
           <!-- Submit button -->
-          <button
-            type="submit"
-            class="btn btn-primary btn-block mb-4"
-          >
-            Sign in
-          </button>
+          <div class="d-flex justify-content-center">
+            <button
+                    type="submit"
+                    class="btn btn-primary btn-block mb-4"
+            >
+              Sign in
+            </button>
+          </div>
+
 
           <!-- Register buttons -->
           <div class="text-center">
