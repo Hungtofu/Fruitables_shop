@@ -55,12 +55,6 @@ public class ShopOrderService {
         }
     }
 
-    public boolean addCartToUserShopOrder(String email, Cart cart, int qty, BigDecimal price)
-    {
-        ShopOrder shopOrder = initUserShopOrder(email);
-
-    }
-
     public List<ShopOrderItemDTO> getShopOrderItemByUser(String email)
     {
         User user = userService.findByEmail(email);
