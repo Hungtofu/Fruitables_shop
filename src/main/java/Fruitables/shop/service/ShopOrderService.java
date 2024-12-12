@@ -4,6 +4,8 @@ import Fruitables.shop.dto.CartItemDTO;
 import Fruitables.shop.dto.ProductDTO;
 import Fruitables.shop.dto.ShopOrderItemDTO;
 import Fruitables.shop.entity.*;
+import Fruitables.shop.repository.CartItemRepository;
+import Fruitables.shop.repository.CartRepository;
 import Fruitables.shop.repository.ShopOrderItemRepository;
 import Fruitables.shop.repository.ShopOrderRepository;
 import Fruitables.shop.util.ImgUtil;
@@ -19,13 +21,17 @@ public class ShopOrderService {
     private final ShopOrderRepository shopOrderRepository;
     private final ShopOrderItemRepository shopOrderItemRepository;
     private final ImgUtil imgUtil;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public ShopOrderService(UserService userService, ShopOrderRepository shopOrderRepository, ShopOrderItemRepository shopOrderItemRepository, ImgUtil imgUtil)
+    public ShopOrderService(UserService userService, ShopOrderRepository shopOrderRepository, ShopOrderItemRepository shopOrderItemRepository, ImgUtil imgUtil, CartRepository cartRepository, CartItemRepository cartItemRepository)
     {
         this.userService = userService;
         this.shopOrderRepository = shopOrderRepository;
         this.shopOrderItemRepository = shopOrderItemRepository;
         this.imgUtil = imgUtil;
+        this.cartRepository = cartRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     public ShopOrder initUserShopOrder(String userEmail)
@@ -65,12 +71,31 @@ public class ShopOrderService {
         for (ShopOrderItem s : shopOrderItemList)
         {
             ShopOrderItemDTO shopOrderItemDTO = new ShopOrderItemDTO();
-            shopOrderItemDTO.setId(s.getId);
-            shopOrderItemDTO.setQty(s.getQty);
+            shopOrderItemDTO.setId(s.getId());
+            shopOrderItemDTO.setQty(s.getQty());
             shopOrderItemDTO.setProductDTO(new ProductDTO(s.getProduct()));
-            shopOrderItemDTO.setPrice(s.getPrice);
+            shopOrderItemDTO.setPrice(s.getPrice());
             shopOrderItemDTOList.add(shopOrderItemDTO);
             shopOrderItemDTO.setImage(imgUtil.getOneProductImage(s.getProduct()));
         }
+        return shopOrderItemDTOList;
+    }
+
+    public void createShopOrderItemsFromCartItems(String email)
+    {
+        User user = userService.findByEmail(email);
+        Cart cart = cartRepository.findByUser(user);
+        List<CartItem> cartItemList = cartItemRepository.findByCart(cart);
+
+        for (CartItem c : cartItemList)
+        {
+            ShopOrderItem shopOrderItem = new ShopOrderItem();
+            shopOrderItem.setId(c.getId());
+            shopOrderItem.setQty(c.getQty());
+            shopOrderItem.setProductDTO(new ProductDTO(c.getProduct()));
+            shopOrderItem.setPrice(c.getProduct().getPrice());
+            shopOrderItemRepository.save(shopOrderItem);
+        }
+        cartItemRepository.deleteAll(cartItemList);
     }
 }

@@ -42,7 +42,9 @@ public class ShopOrderController {
         return ResponseEntity.status(HttpStatus.OK.value()).body(success);
     }
 
-    @GetMapping("/product_items")
+    @PostMapping("/")
+
+    @GetMapping("/items")
     public ResponseEntity<?> getItemByShopOrder() {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
         if (email.isEmpty()) {
