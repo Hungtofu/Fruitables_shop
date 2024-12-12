@@ -42,7 +42,20 @@ public class ShopOrderController {
         return ResponseEntity.status(HttpStatus.OK.value()).body(success);
     }
 
-    @PostMapping("/")
+    @PostMapping("/cart/{cardId}")
+    public ResponseEntity<?> createShopOrderFromCart(@PathVariable Long cartId) {
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
+        if (email.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK.value()).body(null);
+        }
+
+        try {
+            ShopOrderService.createShopOrderItemsFromCartItems(email, cartId);
+            return ResponseEntity.ok("Shop Order created successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
 
     @GetMapping("/items")
     public ResponseEntity<?> getItemByShopOrder() {

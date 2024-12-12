@@ -81,7 +81,7 @@ public class ShopOrderService {
         return shopOrderItemDTOList;
     }
 
-    public void createShopOrderItemsFromCartItems(String email)
+    public static void createShopOrderItemsFromCartItems(String email, Long card_id)
     {
         User user = userService.findByEmail(email);
         Cart cart = cartRepository.findByUser(user);
