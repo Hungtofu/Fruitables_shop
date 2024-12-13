@@ -12,18 +12,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch {
       console.error("Error fetching account data:", error);
     }
-
-    responseData = fetchRefreshAccessToken();
-    console.log(responseData);
-
-
-    // if (responseData == null) {
-
-    //   responseData = fetchRefreshAccessToken();
-    //   console.log(responseData);
-
-    // }
   }
+  
 });
 
 function setAccountProfile(data) {

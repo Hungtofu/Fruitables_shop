@@ -26,7 +26,26 @@ public class ProductService {
         return productRepo.findById(id);
     }
 
-    public PageProductDTO getAllProduct(Specification<Product> spec, Pageable pageable){
+    public PageProductDTO getAllProduct(Pageable pageable){
+
+        PageProductDTO pageProductDTO = new PageProductDTO();
+
+        Page<Product> productPage = this.productRepo.findAll(pageable);
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        for(Product p : productPage){
+            productDTOList.add(new ProductDTO(p));
+        }
+
+        pageProductDTO.setMeta(new PageProductDTO.Meta(pageable.getPageNumber()+ 1,
+                pageable.getPageSize(),
+                productPage.getTotalPages(),
+                productPage.getTotalElements()));
+        pageProductDTO.setProductDTOList(productDTOList);
+
+        return pageProductDTO;
+    }
+
+    public PageProductDTO getProductByFilter(Specification<Product> spec, Pageable pageable){
 
         PageProductDTO pageProductDTO = new PageProductDTO();
 

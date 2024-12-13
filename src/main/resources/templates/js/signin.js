@@ -25,7 +25,7 @@ document
           alert("Login successful");
           document.getElementById("signin_form").reset();
           localStorage.setItem("accessToken", data.data.access_token);
-          // window.location = "../templates/index.html";
+          window.location = "../templates/index.html";
         } else {
           alert("Login failed");
         }

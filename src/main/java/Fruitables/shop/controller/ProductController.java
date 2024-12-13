@@ -1,5 +1,7 @@
 package Fruitables.shop.controller;
 
+import Fruitables.shop.dto.PageProductDTO;
+import Fruitables.shop.dto.ProductDTO;
 import Fruitables.shop.entity.Product;
 import Fruitables.shop.payload.RestResponse;
 import Fruitables.shop.service.ProductService;
@@ -26,20 +28,20 @@ public class ProductController {
     }
 
     @GetMapping("/getall")
-    public ResponseEntity<RestResponse<Object>> getAllProduct(
+    public ResponseEntity<PageProductDTO> getAllProduct(Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK.value()).body(productService.getAllProduct(pageable));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<PageProductDTO> getProductByFilter(
             @Filter Specification<Product> spec,
             Pageable pageable){
-
-        RestResponse<Object> response = new RestResponse<Object>();
-        response.setData(productService.getAllProduct(spec, pageable));
-        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(productService.getProductByFilter(spec, pageable));
     }
 
     @PostMapping("/getdetail/{id}")
-    public ResponseEntity<RestResponse<Object>> getDetail(@PathVariable int id){
-        RestResponse<Object> response = new RestResponse<Object>();
-        response.setData(productService.getDetail(id));
-        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
+    public ResponseEntity<ProductDTO> getDetail(@PathVariable int id){
+        return ResponseEntity.status(HttpStatus.OK.value()).body(productService.getDetail(id));
     }
 
 }
