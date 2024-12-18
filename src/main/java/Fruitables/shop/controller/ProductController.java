@@ -2,6 +2,7 @@ package Fruitables.shop.controller;
 
 import Fruitables.shop.dto.PageProductDTO;
 import Fruitables.shop.dto.ProductDTO;
+import Fruitables.shop.dto.ProductDetailDTO;
 import Fruitables.shop.entity.Product;
 import Fruitables.shop.payload.RestResponse;
 import Fruitables.shop.service.ProductService;
@@ -40,7 +41,7 @@ public class ProductController {
     }
 
     @PostMapping("/getdetail/{id}")
-    public ResponseEntity<ProductDTO> getDetail(@PathVariable int id){
+    public ResponseEntity<ProductDetailDTO> getDetail(@PathVariable int id){
         return ResponseEntity.status(HttpStatus.OK.value()).body(productService.getDetail(id));
     }
 

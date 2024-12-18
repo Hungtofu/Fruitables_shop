@@ -1,5 +1,6 @@
 package Fruitables.shop.util;
 
+import Fruitables.shop.entity.Image;
 import Fruitables.shop.entity.Product;
 import Fruitables.shop.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Service
 public class ImgUtil {
@@ -99,6 +101,9 @@ public class ImgUtil {
         return imageRepo.findFirstByProduct(product).getUrl();
     }
 
+    public List<Image> getAllImgByProduct(Product product){
+        return imageRepo.findByProduct(product);
+    }
 
 
 }

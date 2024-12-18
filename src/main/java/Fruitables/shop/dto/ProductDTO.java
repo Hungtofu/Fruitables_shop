@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,19 +17,16 @@ import java.math.BigDecimal;
 public class ProductDTO {
 
     private int id;
-    private Category category;
     private String name;
-    private Long qtyInStock;
     private BigDecimal price;
     private String description;
+    private String image;
 
     public ProductDTO(Product product) {
         this.id = product.getId();
-        this.category = product.getCategory();
         this.name = product.getName();
-        this.qtyInStock = product.getQtyInStock();
         this.price = product.getPrice();
         this.description = product.getDescription();
+        this.image = product.getDescription();
     }
-
 }

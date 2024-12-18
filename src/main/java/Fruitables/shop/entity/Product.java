@@ -27,7 +27,7 @@ public class Product {
     private String name;
 
     @Column(name = "qty_in_stock")
-    private Long qtyInStock;
+    private int qtyInStock;
 
     @Column(name = "price")
     private BigDecimal price;
