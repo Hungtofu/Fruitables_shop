@@ -20,13 +20,15 @@ public class DeliveryInformationController {
     }
 
     @PostMapping("/item")
-    public ResponseEntity<String> addDeliveryInfo(@RequestBody DeliveryInformationDTO delivery)
+    public ResponseEntity<DeliveryInformationDTO> addDeliveryInfo(@RequestBody DeliveryInformationDTO delivery)
     {
         String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
         if(email.isEmpty()){
-            return ResponseEntity.status(404).body("Cannot find the current user to add delivery information!");
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(null);
         }
         deliveryService.saveUserDeliveryInfo(email, delivery);
-        return ResponseEntity.ok("Delivery Information of User added successfully!");
+        return ResponseEntity.ok(delivery);
     }
 }
