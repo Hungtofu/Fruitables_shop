@@ -1,7 +1,9 @@
 package Fruitables.shop.controller;
 
 import Fruitables.shop.dto.CartItemDTO;
+import Fruitables.shop.entity.CartItem;
 import Fruitables.shop.entity.Product;
+import Fruitables.shop.service.CartItemService;
 import Fruitables.shop.service.CartService;
 import Fruitables.shop.service.ProductService;
 import Fruitables.shop.util.SecurityUtil;
@@ -18,22 +20,40 @@ public class CartController {
 
     private final ProductService productService;
     private final CartService cartService;
+    private final CartItemService cartItemService;
 
-    public CartController(ProductService productService, CartService cartService) {
+    public CartController(ProductService productService, CartService cartService, CartItemService cartItemService) {
         this.productService = productService;
         this.cartService = cartService;
+        this.cartItemService = cartItemService;
     }
 
-    @PostMapping("/item")
+    @PostMapping("/additem")
     public ResponseEntity<Boolean> addProduct(@RequestParam int productId, @RequestParam int qty){
         String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
         Product product = productService.getById(productId);
         if(email.isEmpty() || product == null || product.getQtyInStock() < qty){
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);
         }
+        return ResponseEntity.status(HttpStatus.OK.value()).body( cartService.addProductToUserCart(email, product, qty));
+    }
 
-        boolean success = cartService.addProductToUserCart(email, product, qty);
-        return ResponseEntity.status(HttpStatus.OK.value()).body(success);
+    @PostMapping("/item/increase")
+    public ResponseEntity<Boolean> increaseQty(@RequestParam int cartItemId){
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
+        if(email.isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK.value()).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK.value()).body(cartItemService.increaseQty(cartItemId));
+    }
+
+    @PostMapping("/item/decrease")
+    public ResponseEntity<Boolean> decreaseQty(@RequestParam int cartItemId){
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
+        if(email.isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK.value()).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK.value()).body(cartItemService.decreaseQty(cartItemId));
     }
 
     @GetMapping("/items")

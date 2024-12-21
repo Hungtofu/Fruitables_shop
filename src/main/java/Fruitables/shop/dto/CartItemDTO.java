@@ -1,5 +1,6 @@
 package Fruitables.shop.dto;
 
+import Fruitables.shop.entity.Cart;
 import Fruitables.shop.entity.CartItem;
 import Fruitables.shop.entity.Product;
 import lombok.AllArgsConstructor;
@@ -18,5 +19,8 @@ public class CartItemDTO {
     private int qty;
     private String image;
 
-
+    public CartItemDTO(CartItem cartItem) {
+        this.productDTO = new ProductDTO(cartItem.getProduct());
+        this.qty = cartItem.getQty();
+    }
 }
