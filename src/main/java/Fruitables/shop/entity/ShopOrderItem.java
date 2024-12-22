@@ -33,4 +33,12 @@ public class ShopOrderItem {
     @Column(name = "price")
     private BigDecimal price;
 
+    public ShopOrderItem(ShopOrder shopOrder, Product product, int qty, BigDecimal price)
+    {
+        this.shopOrder = shopOrder;
+        this.product = product;
+        this.qty = qty;
+        this.price = price;
+
+    }
 }

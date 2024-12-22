@@ -19,7 +19,22 @@ public class DeliveryInformationService {
         this.userService = userService;
     }
 
-    public DeliveryInformation saveUserDeliveryInfo(String email, DeliveryInformationDTO dto){
+    public boolean addDeliveryInfo(String email, String firstName, String lastName, String phoneNumbers, String address1, String address2, String commune, String district, String province)
+    {
+        User user = userService.findByEmail(email);
+        DeliveryInformation deli = new DeliveryInformation(user, firstName, lastName, phoneNumbers, address1, address2, commune, district, province);
+        try {
+            deliveryInformationRepository.save(deli);
+            return true;
+        }
+        catch (Exception e) {
+            System.out.print("Error save cart item: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /*
+    public boolean saveUserDeliveryInfo(String email, DeliveryInformationDTO dto){
         User user = userService.findByEmail(email);
         DeliveryInformation deliveryInformation = deliveryInformationRepository.findByUser(user);
         if (deliveryInformation == null)
@@ -30,7 +45,7 @@ public class DeliveryInformationService {
             newDelivery.setLastName(dto.getLastName());
             newDelivery.setPhoneNumbers(dto.getPhoneNumbers());
             newDelivery.setAddress1(dto.getAddress1());
-            newDelivery.setAddress2(dto.getAddess2());
+            newDelivery.setAddress2(dto.getAddress2());
             newDelivery.setCommune(dto.getCommune());
             newDelivery.setDistrict(dto.getDistrict());
             newDelivery.setProvince(dto.getProvince());
@@ -39,8 +54,8 @@ public class DeliveryInformationService {
         }
         return deliveryInformation;
     }
+     */
 
-    /*
     public List<DeliveryInformationDTO> getDeliveryInformationByUser(String email) {
         User user = userService.findByEmail(email);
         List<DeliveryInformation> deliveryInformationList = deliveryInformationRepository.findByUser(user);
@@ -61,5 +76,5 @@ public class DeliveryInformationService {
         }
         return deliveryInformationDTOList;
     }
-    */
+
 }
