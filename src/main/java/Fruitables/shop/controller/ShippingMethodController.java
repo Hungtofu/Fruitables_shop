@@ -23,7 +23,7 @@ public class ShippingMethodController {
     public ResponseEntity<RestResponse<Object>> getAll()
     {
         RestResponse<Object> response = new RestResponse<Object>();
-        response.setData(shippingMethodService.getallShippingMethod());
+        response.setData(shippingMethodService.getAllShippingMethod());
         return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
 }
