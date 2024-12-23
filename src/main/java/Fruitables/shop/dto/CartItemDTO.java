@@ -18,5 +18,8 @@ public class CartItemDTO {
     private int qty;
     private String image;
 
-
+    public CartItemDTO(CartItem cartItem) {
+        this.productDTO = new ProductDTO(cartItem.getProduct());
+        this.qty = cartItem.getQty();
+    }
 }

@@ -34,7 +34,7 @@ public class ShopOrderService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public ShopOrder initUserShopOrder(String userEmail)
+    public ShopOrder initUserShopOrder(String userEmail, )
     {
         User user = userService.findByEmail(userEmail);
         ShopOrder shopOrder = shopOrderRepository.findByUser(user);
@@ -42,6 +42,7 @@ public class ShopOrderService {
         {
             ShopOrder newShopOrder = new ShopOrder();
             newShopOrder.setUser(user);
+            newShopOrder.
             shopOrderRepository.save(newShopOrder);
             return newShopOrder;
         }
