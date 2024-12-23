@@ -137,41 +137,60 @@
             <!-- Left Content Section -->
             <div class="col-md-8">
                 <div id="account-info" class="p-3 bg-light rounded">
+                    <div class="d-flex justify-content-center">
+                        <img id="displayImageProfile" src="../static/images/userImage/user_profile.png" style="height: 100px; width: 100px; object-fit: cover;"
+                            class="img-fluid ">
+                    </div>
+
                     <h3>Account Information</h3>
                     <table class="table">
                         <tbody>
                             <tr>
                                 <th>Name:</th>
-                                <td>John Doe</td>
+                                <td id="displayUserName">John Doe</td>
                             </tr>
                             <tr>
                                 <th>Email:</th>
-                                <td>johndoe@example.com</td>
+                                <td id="displayEmail">johndoe@example.com</td>
                             </tr>
                             <tr>
-                                <th>Phone:</th>
-                                <td>+123456789</td>
+                                <th>Gender:</th>
+                                <td id="displayGender">Female</td>
                             </tr>
+                            <tr>
+                                <th>Date of birth:</th>
+                                <td id="displayDOB">01/01/2024</td>
+                            </tr>
+
                         </tbody>
                     </table>
                 </div>
 
                 <div id="edit-account" class="p-3 bg-light rounded d-none">
                     <h3>Edit Account</h3>
-                    <form>
+                    <form id="update_form">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" id="name" class="form-control" value="John Doe" />
+                            <label for="updateImageProfile" class="form-label">Image profile</label>
+                            <input type="file" id="updateImageProfile" name="file" class="form-control" />
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" id="email" class="form-control" value="johndoe@example.com" />
+                            <label for="updateName" class="form-label">Name</label>
+                            <input type="text" id="updateName" class="form-control" value="John Doe" />
                         </div>
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Phone</label>
-                            <input type="text" id="phone" class="form-control" value="+123456789" />
+                            <label for="updateGender" class="form-label">Gender</label>
+                            <select id="updateGender" class="form-select">
+                                <option value="" disabled selected>Select your gender</option>
+                                <option value="MALE">Male</option>
+                                <option value="FEMALE">Female</option>
+                                <option value="OTHER">Other</option>
+                            </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <div class="mb-3">
+                            <label for="updateDOB" class="form-label">Date of Birth</label>
+                            <input type="date" id="updateDOB" class="form-control" placeholder="dd/mm/yyyy" />
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="updateAccountBtn">Save</button>
                     </form>
                 </div>
 
@@ -186,8 +205,27 @@
 
                 <div id="delivery-info" class="p-3 bg-light rounded d-none">
                     <h3>Delivery Information</h3>
-                    <p>Address: 123 Main Street, City, Country</p>
+                    <div id="delivery-list">
+                        <!-- Mẫu thông tin giao hàng -->
+                        <div class="delivery-item mb-3 p-3 border rounded bg-white default-delivery">
+                            <p><strong>Address:</strong> 123 Main Street, City, Country</p>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary btn-sm me-2">Edit</button>
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </div>
+                        </div>
+                        <div class="delivery-item mb-3 p-3 border rounded bg-white">
+                            <p><strong>Address:</strong> 456 Another Street, City, Country</p>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary btn-sm me-2">Edit</button>
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </div>
+                        </div>
+                        <!-- Thêm các item khác tại đây -->
+                    </div>
+                    <button id="add-delivery-btn" class="btn btn-success mt-3">Add New Delivery Information</button>
                 </div>
+
             </div>
 
             <!-- Right Navigation Section -->
@@ -196,16 +234,16 @@
                     <button class="list-group-item list-group-item-action active" data-target="account-info">
                         Account
                     </button>
-                    <button class="list-group-item list-group-item-action" data-target="edit-account">
+                    <button class="list-group-item list-group-item-action" data-target="edit-account" >
                         Edit Account
                     </button>
-                    <button class="list-group-item list-group-item-action" data-target="history">
+                    <button class="list-group-item list-group-item-action" data-target="history" onclick="showHistory()">
                         History
                     </button>
                     <button class="list-group-item list-group-item-action" data-target="delivery-info">
                         Delivery Information
                     </button>
-                    <a href="/logout" class="list-group-item list-group-item-action text-danger">Log Out</a>
+                    <a class="list-group-item list-group-item-action text-danger">Log Out</a>
                 </div>
             </div>
         </div>

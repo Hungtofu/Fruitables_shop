@@ -20,8 +20,8 @@ public class UserInfoDetail {
     private String userName;
     private GenderEnum gender;
     private String image;
-
     private Instant dob;
+
     private String createdBy;
     private Instant createdAt;
     private String updatedBy;

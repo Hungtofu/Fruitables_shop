@@ -19,7 +19,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 function setAccountProfile(data) {
   const userProfile = document.getElementById("user_image_profile");
   userProfile.href = "./account.html";
-  userProfile.innerHTML = `<img src="../static/images/userImage/${data.img}">`;
+  if(data.img !== undefined){
+    userProfile.innerHTML = `<img src="../static/images/userImage/${data.img}">`;
+  } else {
+    userProfile.innerHTML = `<img src="../static/images/userImage/user_profile.png">`;
+  }
+
 }
 
 async function fetchAccount(accessToken) {

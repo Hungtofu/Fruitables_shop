@@ -500,3 +500,8 @@
     height: 50px;
     border-radius: 0.5;
 }
+
+.default-delivery {
+    border: 2px solid #28a745; /* Màu viền xanh lá */
+    background-color: #e6f9e8; /* Màu nền nhạt */
+}

@@ -39,7 +39,7 @@ public class UserController {
 
     @GetMapping("/account")
     @ApiMessage("fetch account")
-    public ResponseEntity<UserLoginDTO.UserInfo> getAccount(){
+    public ResponseEntity<UserInfoDetail> getAccount(){
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get(): "";
         if(email.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);
@@ -47,12 +47,14 @@ public class UserController {
 
         User currentUser = userService.findByEmail(email);
 
-        UserLoginDTO.UserInfo userInfo = new UserLoginDTO.UserInfo();
+        UserInfoDetail userInfo = new UserInfoDetail();
         if (currentUser != null){
+            userInfo.setGender(currentUser.getGender());
             userInfo.setId(currentUser.getId());
             userInfo.setUserName(currentUser.getUserName());
             userInfo.setEmail(currentUser.getEmail());
-            userInfo.setImg(currentUser.getImg());
+            userInfo.setImage(currentUser.getImg());
+            userInfo.setDob(currentUser.getDob());
         }
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(userInfo);

@@ -38,8 +38,8 @@ document
       },
       body: JSON.stringify(request),
     })
-      .then(response => response.json())
-      .then(data =>{
+      .then((response) => response.json())
+      .then((data) => {
         if (data.statusCode == 200 && data.data != null) {
           alert("Registration successful");
           document.getElementById("signup_form").reset();
