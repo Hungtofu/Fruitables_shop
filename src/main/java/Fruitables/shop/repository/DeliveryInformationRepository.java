@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface DeliveryInformationRepository extends JpaRepository<DeliveryInformation, Integer> {
     List<DeliveryInformation> findByUser(User user);
+    DeliveryInformation findById(int id);
 }

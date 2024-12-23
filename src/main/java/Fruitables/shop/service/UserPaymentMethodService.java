@@ -25,7 +25,7 @@ public class UserPaymentMethodService {
         {
             UserPaymentMethod userPaymentMethod = new UserPaymentMethod();
             userPaymentMethod.setUser(user);
-            userPaymentMethod.setPaymentType(paymentRepo.findById(dto.getId()));
+            userPaymentMethod.setPaymentType(paymentRepo.findById(dto.getPaymentTypeId()));
             userPaymentMethod.setProvider(dto.getProvider());
             userPaymentMethod.setAccountNumber(dto.getAccountNumber());
             userPaymentMethod.setExpiryDate(dto.getExpiryDate());

@@ -31,7 +31,7 @@ public class ShopOrderItem {
     private int qty;
 
     @Column(name = "price")
-    private BigDecimal price;
+    private Double price;
 
     public ShopOrderItem(ShopOrder shopOrder, Product product, int qty, BigDecimal price)
     {

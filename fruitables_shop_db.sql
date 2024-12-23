@@ -102,7 +102,7 @@ create table user_payment_method(
 create table shipping_method(
 	id int auto_increment,
     name varchar(65),
-    price decimal,
+    price double,
     
     primary key(id)
 );
@@ -121,7 +121,7 @@ create table shop_order(
     payment_method int,
 	shipping_address int,
     shipping_method int,
-    order_total decimal,
+    order_total double,
     order_status int  ,
     
     primary key(id)
@@ -132,7 +132,7 @@ create table shop_order_item(
     product_id int,
     shop_order_id int,
     qty int,
-    price decimal,
+    price double,
     
     primary key(id)
 );

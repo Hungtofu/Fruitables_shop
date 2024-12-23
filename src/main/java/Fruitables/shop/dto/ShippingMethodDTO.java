@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class ShippingMethodDTO {
     private int id;
     private String name;
-    private BigDecimal price;
+    private Double price;
 
     public ShippingMethodDTO(ShippingMethod ship)
     {

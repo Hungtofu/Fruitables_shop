@@ -19,7 +19,7 @@ public class ProductDTO {
     private Category category;
     private String name;
     private Long qtyInStock;
-    private BigDecimal price;
+    private Double price;
     private String description;
 
     public ProductDTO(Product product) {

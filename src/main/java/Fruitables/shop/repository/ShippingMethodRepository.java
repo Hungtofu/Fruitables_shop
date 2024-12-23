@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ShippingMethodRepository extends JpaRepository<ShippingMethod, Integer> {
-
+    ShippingMethod findById(int id);
 }

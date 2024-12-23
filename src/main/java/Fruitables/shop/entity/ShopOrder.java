@@ -33,14 +33,14 @@ public class ShopOrder {
 
     @ManyToOne
     @JoinColumn(name = "shipping_address")
-    private DeliveryInformation shippingAdress;
+    private DeliveryInformation shippingAddress;
 
     @ManyToOne
     @JoinColumn(name = "shipping_method")
     private ShippingMethod shippingMethod;
 
     @Column(name = "order_total")
-    private BigDecimal orderTotal;
+    private Double orderTotal;
 
     @ManyToOne
     @JoinColumn(name = "order_status")

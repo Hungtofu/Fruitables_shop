@@ -23,6 +23,6 @@ public class ShippingMethod {
     private String name;
 
     @Column(name = "price")
-    private BigDecimal price;
+    private Double price;
 
 }
