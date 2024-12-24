@@ -59,7 +59,7 @@ public class ShopOrderService {
             private Double price = 0;
             for (ShopOrderItem s : shopOrderItemList)
             {
-                price = s.getPrice();
+                price = s.getPrice() * s.getQty();
                 total += price;
             }
             dto.getOrderTotal() = total;
@@ -71,7 +71,7 @@ public class ShopOrderService {
         return shopOrder;
     }
 
-    public boolean addProductToUserShopOrder(String email, ShopOrderDTO dto, Product product, int qty, BigDecimal price)
+    public boolean addProductToUserShopOrder(String email, ShopOrderDTO dto, Product product, int qty, Double price)
     {
         ShopOrder shopOrder = initUserShopOrder(email, dto);
         ShopOrderItem shopOrderItem = new ShopOrderItem(shopOrder, product, qty, price);
@@ -114,13 +114,18 @@ public class ShopOrderService {
         try {
             for (CartItem c : cartItemList)
             {
-                ShopOrderItem shopOrderItem = new ShopOrderItem();
-                shopOrderItem.setId(c.getId());
-                shopOrderItem.setQty(c.getQty());
-                shopOrderItem.setProduct(productRepository.findById(c.getProduct().getId()));
-                shopOrderItem.setShopOrder(shopOrderItemRepository.findById(shopOrder.getId));
-                shopOrderItem.setPrice(c.getProduct().getPrice());
-                shopOrderItemRepository.save(shopOrderItem);
+                Product product = productRepository.findById(c.getProduct().getId());
+                if (product.getQtyInStock() - c.getQty() >= 0)
+                {
+                    ShopOrderItem shopOrderItem = new ShopOrderItem();
+                    shopOrderItem.setId(c.getId());
+                    shopOrderItem.setQty(c.getQty());
+                    shopOrderItem.setProduct(productRepository.findById(c.getProduct().getId()));
+                    product.setQtyInStock(product.getQtyInStock() - c.getQty());
+                    shopOrderItem.setShopOrder(shopOrderItemRepository.findById(shopOrder.getId));
+                    shopOrderItem.setPrice(c.getProduct().getPrice());
+                    shopOrderItemRepository.save(shopOrderItem);
+                }
             }
             cartItemRepository.deleteAll(cartItemList);
             return true;
