@@ -33,7 +33,7 @@ public class ShopOrderItem {
     @Column(name = "price")
     private Double price;
 
-    public ShopOrderItem(ShopOrder shopOrder, Product product, int qty, BigDecimal price)
+    public ShopOrderItem(ShopOrder shopOrder, Product product, int qty, Double price)
     {
         this.shopOrder = shopOrder;
         this.product = product;

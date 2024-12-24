@@ -46,6 +46,7 @@ public class ShopOrderService {
     {
         User user = userService.findByEmail(userEmail);
         ShopOrder shopOrder = shopOrderRepository.findByUser(user);
+        List<ShopOrderItem> shopOrderItemList = shopOrderItemRepository.findByShopOrder(shopOrder);
         if (shopOrder == null)
         {
             ShopOrder newShopOrder = new ShopOrder();
@@ -54,6 +55,14 @@ public class ShopOrderService {
             newShopOrder.setPaymentMethod(userPaymentMethodRepository.findById(dto.getPaymentMethodId()));
             newShopOrder.setShippingAddress(deliveryInformationRepository.findById(dto.getShippingAddressId()));
             newShopOrder.setShippingMethod(shippingMethodRepository.findById(dto.getShippingMethodId));
+            private Double total = 0;
+            private Double price = 0;
+            for (ShopOrderItem s : shopOrderItemList)
+            {
+                price = s.getPrice();
+                total += price;
+            }
+            dto.getOrderTotal() = total;
             newShopOrder.setOrderTotal(dto.getOrderTotal());
             newShopOrder.setOrderStatus(orderStatusRepository.findById(dto.getOrderStatusId()));
             shopOrderRepository.save(newShopOrder);
