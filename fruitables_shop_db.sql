@@ -50,7 +50,7 @@ create table product(
     category_id int,
     name varchar(65),
     qty_in_stock int,
-    price decimal,
+    price double,
 	description text,
     
     primary key(id)
