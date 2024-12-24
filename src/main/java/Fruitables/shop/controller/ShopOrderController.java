@@ -1,5 +1,6 @@
 package Fruitables.shop.controller;
 
+import Fruitables.shop.dto.ShopOrderDTO;
 import Fruitables.shop.dto.ShopOrderItemDTO;
 import Fruitables.shop.entity.Product;
 import Fruitables.shop.service.CartService;
@@ -30,15 +31,16 @@ public class ShopOrderController {
     }
 
     @PostMapping("/product_item")
-    public ResponseEntity<Boolean> addProduct(@RequestParam int productId, @RequestParam int qty, @RequestParam BigDecimal price)
+    public ResponseEntity<Boolean> addProduct(@RequestParam int productId, @RequestBody ShopOrderDTO shopOrderDTO,@RequestParam int qty, @RequestParam Double price)
     {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
         Product product = productService.getById(productId);
+
         if (email.isEmpty() || product == null || product.getQtyInStock() < qty)
         {
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);
         }
-        boolean success = shopOrderService.addProductToUserShopOrder(email, product, qty, price);
+        boolean success = shopOrderService.addProductToUserShopOrder(email, shopOrderDTO, product, qty, price);
         return ResponseEntity.status(HttpStatus.OK.value()).body(success);
     }
 
