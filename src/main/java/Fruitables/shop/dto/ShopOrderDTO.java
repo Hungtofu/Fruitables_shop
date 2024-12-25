@@ -1,5 +1,6 @@
 package Fruitables.shop.dto;
 
+import Fruitables.shop.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class ShopOrderDTO {
     private int id;
+    private User user;
     private Timestamp orderDate;
     private int paymentMethodId;
     private int shippingAddressId;

@@ -20,13 +20,9 @@ import java.util.List;
 
 public class ShopOrderController {
     private final ShopOrderService shopOrderService;
-    private final CartService cartService;
-    private final ProductService productService;
 
-    public ShopOrderController(ProductService productService, CartService cartService, ShopOrderService shopOrderService)
+    public ShopOrderController(ShopOrderService shopOrderService)
     {
-        this.productService = productService;
-        this.cartService = cartService;
         this.shopOrderService = shopOrderService;
     }
 
@@ -47,13 +43,13 @@ public class ShopOrderController {
     /
      */
 
-    @PostMapping("/cart_item")
-    public ResponseEntity<?> createShopOrderFromCart() {
+    @PostMapping("/add_order")
+    public ResponseEntity<?> addShopOrder(@RequestParam int paymentMethodId, @RequestParam int shippingAddressId, @RequestParam int shippingMethodId, @RequestParam int orderStatusId) {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
         if (email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);
         }
-        boolean success = shopOrderService.createShopOrderItemsFromCartItems(email);
+        boolean success = shopOrderService.createShopOrderFromCart(email, paymentMethodId, shippingAddressId, shippingMethodId, orderStatusId);
         return ResponseEntity.status(HttpStatus.OK.value()).body(success);
     }
 

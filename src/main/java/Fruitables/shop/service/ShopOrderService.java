@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class ShopOrderService {
     private final ShippingMethodRepository shippingMethodRepository;
     private final OrderStatusRepository orderStatusRepository;
     private final ProductRepository productRepository;
+    Double total = 0.0;
+    Double price = 0.0;
 
     public ShopOrderService(UserService userService, ShopOrderRepository shopOrderRepository, ShopOrderItemRepository shopOrderItemRepository, ImgUtil imgUtil, CartRepository cartRepository, CartItemRepository cartItemRepository, UserPaymentMethodRepository userPaymentMethodRepository, DeliveryInformationRepository deliveryInformationRepository, ShippingMethodRepository shippingMethodRepository, OrderStatusRepository orderStatusRepository, ProductRepository productRepository)
     {
@@ -43,10 +47,11 @@ public class ShopOrderService {
         this.productRepository = productRepository;
     }
 
-    public boolean addUserShopOrder(String userEmail, ShopOrderDTO dto)
+    /*
+    public boolean addUserShopOrder(String userEmail, ShopOrderDTO dto, int shopOrderId)
     {
         User user = userService.findByEmail(userEmail);
-        ShopOrder shopOrder = shopOrderRepository.findByUser(user);
+        ShopOrder shopOrder = shopOrderRepository.findByUserAndId(user, shopOrderId);
         List<ShopOrderItem> shopOrderItemList = shopOrderItemRepository.findByShopOrder(shopOrder);
         if (shopOrder == null)
         {
@@ -71,23 +76,9 @@ public class ShopOrderService {
         }
         return shopOrder;
     }
-
-    /*
-    public boolean addProductToUserShopOrder(String email, ShopOrderDTO dto, Product product, int qty, Double price)
-    {
-        ShopOrder shopOrder = initUserShopOrder(email, dto);
-        ShopOrderItem shopOrderItem = new ShopOrderItem(shopOrder, product, qty, price);
-        try {
-            shopOrderItemRepository.save(shopOrderItem);
-            return true;
-        } catch (Exception e) {
-            System.out.print("Error save shop order item: "+ e.getMessage());
-            return false;
-        }
-    }
     /
-     */
 
+     */
     public List<ShopOrderDTO> getShopOrdersOfAUser(String email)
     {
         /*
@@ -107,6 +98,7 @@ public class ShopOrderService {
         {
             ShopOrderDTO shopOrderDTO = new ShopOrderDTO();
             shopOrderDTO.setId(s.getId());
+            shopOrderDTO.setUser(user);
             shopOrderDTO.setTimestamp(s.getTimestamp());
             shopOrderDTO.setPaymentMethodId(s.getPaymentMethodId());
             shopOrderDTO.setShippingAddressId(s.getShippingAddressId());
@@ -138,36 +130,46 @@ public class ShopOrderService {
         return shopOrderItemDTOList;
     }
 
-    public boolean createShopOrderItemsFromCartItems(String email, int shopOrderId)
+    public boolean createShopOrderFromCart(String email, int paymentMethodId, int shippingAddressId, int shippingMethodId, int orderStatusId)
     {
+
         User user = userService.findByEmail(email);
         Cart cart = cartRepository.findByUser(user);
-        // ShopOrder shopOrder = shopOrderRepository.findByUserAndId(user, shopOrderId);
-        List<CartItem> cartItemList = cartItemRepository.findByCart(cart);
 
-        try {
-            for (CartItem c : cartItemList)
-            {
+        List<CartItem> cartItemList = cartItemRepository.findByCart(cart);
+        if (cartItemList != null) {
+            ShopOrder shopOrder = new ShopOrder();
+            shopOrder.setUser(user);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate localDate = LocalDate.now();
+            shopOrder.setOrderDate(dtf.format(localDate));
+            shopOrder.setPaymentMethod(userPaymentMethodRepository.findById(paymentMethodId));
+            shopOrder.setShippingAddress(deliveryInformationRepository.findById(shippingAddressId));
+            shopOrder.setShippingMethod(shippingMethodRepository.findById(shippingMethodId));
+            shopOrder.setOrderStatus(orderStatusRepository.findById(orderStatusId));
+            shopOrder.setOrderTotal(0.0);
+            shopOrderRepository.save(shopOrder);
+            for (CartItem c : cartItemList) {
                 Product product = productRepository.findById(c.getProduct().getId());
-                if (product.getQtyInStock() - c.getQty() >= 0)
-                {
+                if (product.getQtyInStock() - c.getQty() >= 0) {
                     ShopOrderItem shopOrderItem = new ShopOrderItem();
-                    shopOrderItem.setId(c.getId());
+                    // shopOrderItem.setId(c.getId());
                     shopOrderItem.setQty(c.getQty());
                     shopOrderItem.setProduct(productRepository.findById(c.getProduct().getId()));
                     product.setQtyInStock(product.getQtyInStock() - c.getQty());
-                    shopOrderItem.setShopOrder(shopOrderItemRepository.findById(shopOrderId));
+                    shopOrderItem.setShopOrder(shopOrderRepository.findByUserAndId(user, shopOrder.getId()));
                     shopOrderItem.setPrice(c.getProduct().getPrice());
+                    price = c.getPrice() * c.getQty();
+                    total = total + price;
+
                     shopOrderItemRepository.save(shopOrderItem);
                     productRepository.save(product);
                 }
             }
-            cartItemRepository.deleteAll(cartItemList);
+            shopOrder.setOrderTotal(total);
+            shopOrderRepository.save(shopOrder);
             return true;
         }
-        catch (Exception e) {
-            System.out.print("Error adding shop order items from cart items: "+ e.getMessage());
-            return false;
-        }
+        return false;
     }
 }

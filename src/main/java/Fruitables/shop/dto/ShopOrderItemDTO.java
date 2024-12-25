@@ -1,7 +1,9 @@
 package Fruitables.shop.dto;
 
 import Fruitables.shop.entity.CartItem;
+import Fruitables.shop.entity.Product;
 import Fruitables.shop.entity.ShopOrderItem;
+import Fruitables.shop.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,13 +17,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ShopOrderItemDTO {
     private int id;
-    private ProductDTO productDTO;
+    private Product product;
+    private int shopOrderId;
     private int qty;
     private Double price;
-    private String image;
-    public ShopOrderItemDTO(ShopOrderItem shopOrderItem) {
-        this.productDTO = new ProductDTO(shopOrderItem.getProduct());
-        this.qty = shopOrderItem.getQty();
-        this.price = shopOrderItem.getPrice();
-    }
 }
