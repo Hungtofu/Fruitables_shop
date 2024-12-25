@@ -29,8 +29,7 @@ public class ShopOrderService {
     private final ShippingMethodRepository shippingMethodRepository;
     private final OrderStatusRepository orderStatusRepository;
     private final ProductRepository productRepository;
-    Double total = 0.0;
-    Double price = 0.0;
+
 
     public ShopOrderService(UserService userService, ShopOrderRepository shopOrderRepository, ShopOrderItemRepository shopOrderItemRepository, ImgUtil imgUtil, CartRepository cartRepository, CartItemRepository cartItemRepository, UserPaymentMethodRepository userPaymentMethodRepository, DeliveryInformationRepository deliveryInformationRepository, ShippingMethodRepository shippingMethodRepository, OrderStatusRepository orderStatusRepository, ProductRepository productRepository)
     {
@@ -124,6 +123,7 @@ public class ShopOrderService {
             shopOrderItemDTO.setQty(s.getQty());
             shopOrderItemDTO.setProductDTO(new ProductDTO(s.getProduct()));
             shopOrderItemDTO.setPrice(s.getPrice());
+            shopOrderItemDTO.setShopOrderId(shopOrderId);
             shopOrderItemDTOList.add(shopOrderItemDTO);
             shopOrderItemDTO.setImage(imgUtil.getOneProductImage(s.getProduct()));
         }
@@ -135,7 +135,8 @@ public class ShopOrderService {
 
         User user = userService.findByEmail(email);
         Cart cart = cartRepository.findByUser(user);
-
+        Double total = 0.0;
+        Double price = 0.0;
         List<CartItem> cartItemList = cartItemRepository.findByCart(cart);
         if (cartItemList != null) {
             ShopOrder shopOrder = new ShopOrder();
