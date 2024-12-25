@@ -10,6 +10,7 @@ import Fruitables.shop.util.ImgUtil;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class ShopOrderService {
         this.productRepository = productRepository;
     }
 
-    public ShopOrder initUserShopOrder(String userEmail, ShopOrderDTO dto)
+    public boolean addUserShopOrder(String userEmail, ShopOrderDTO dto)
     {
         User user = userService.findByEmail(userEmail);
         ShopOrder shopOrder = shopOrderRepository.findByUser(user);
@@ -71,6 +72,7 @@ public class ShopOrderService {
         return shopOrder;
     }
 
+    /*
     public boolean addProductToUserShopOrder(String email, ShopOrderDTO dto, Product product, int qty, Double price)
     {
         ShopOrder shopOrder = initUserShopOrder(email, dto);
@@ -83,11 +85,43 @@ public class ShopOrderService {
             return false;
         }
     }
+    /
+     */
 
-    public List<ShopOrderItemDTO> getShopOrderItemByUser(String email)
+    public List<ShopOrderDTO> getShopOrdersOfAUser(String email)
+    {
+        /*
+        private int id;
+        private Timestamp orderDate;
+        private int paymentMethodId;
+        private int shippingAddressId;
+        private int shippingMethodId;
+        private Double orderTotal;
+        private int orderStatusId;
+        /
+         */
+        User user = userService.findByEmail(email);
+        List<ShopOrder> orderList = shopOrderRepository.findByUser(user);
+        List<ShopOrderDTO> orderDTOList = new ArrayList<>();
+        for (ShopOrder s : orderList)
+        {
+            ShopOrderDTO shopOrderDTO = new ShopOrderDTO();
+            shopOrderDTO.setId(s.getId());
+            shopOrderDTO.setTimestamp(s.getTimestamp());
+            shopOrderDTO.setPaymentMethodId(s.getPaymentMethodId());
+            shopOrderDTO.setShippingAddressId(s.getShippingAddressId());
+            shopOrderDTO.setShippingMethodId(s.getShippingMethodId());
+            shopOrderDTO.setOrderTotal(s.getOrderTotal());
+            shopOrderDTO.setOrderStatusId(s.getOrderStatusId());
+            orderDTOList.add(shopOrderDTO);
+        }
+        return orderDTOList;
+    }
+
+    public List<ShopOrderItemDTO> getShopOrderItemsOfAShopOrder(String email, int shopOrderId)
     {
         User user = userService.findByEmail(email);
-        ShopOrder shopOrder = shopOrderRepository.findByUser(user);
+        ShopOrder shopOrder = shopOrderRepository.findByUserAndId(user, shopOrderId);
         List<ShopOrderItem> shopOrderItemList = shopOrderItemRepository.findByShopOrder(shopOrder);
 
         List<ShopOrderItemDTO> shopOrderItemDTOList = new ArrayList<>();
@@ -104,11 +138,11 @@ public class ShopOrderService {
         return shopOrderItemDTOList;
     }
 
-    public boolean createShopOrderItemsFromCartItems(String email)
+    public boolean createShopOrderItemsFromCartItems(String email, int shopOrderId)
     {
         User user = userService.findByEmail(email);
         Cart cart = cartRepository.findByUser(user);
-        ShopOrder shopOrder = shopOrderRepository.findByUser(user);
+        // ShopOrder shopOrder = shopOrderRepository.findByUserAndId(user, shopOrderId);
         List<CartItem> cartItemList = cartItemRepository.findByCart(cart);
 
         try {
@@ -122,9 +156,10 @@ public class ShopOrderService {
                     shopOrderItem.setQty(c.getQty());
                     shopOrderItem.setProduct(productRepository.findById(c.getProduct().getId()));
                     product.setQtyInStock(product.getQtyInStock() - c.getQty());
-                    shopOrderItem.setShopOrder(shopOrderItemRepository.findById(shopOrder.getId));
+                    shopOrderItem.setShopOrder(shopOrderItemRepository.findById(shopOrderId));
                     shopOrderItem.setPrice(c.getProduct().getPrice());
                     shopOrderItemRepository.save(shopOrderItem);
+                    productRepository.save(product);
                 }
             }
             cartItemRepository.deleteAll(cartItemList);

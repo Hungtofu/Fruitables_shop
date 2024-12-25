@@ -6,7 +6,10 @@ import Fruitables.shop.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ShopOrderRepository extends JpaRepository<ShopOrder, Integer> {
-    ShopOrder findByUser(User user);
+    List<ShopOrder> findByUser(User user);
+    ShopOrder findByUserAndId(User user, int id);
 }

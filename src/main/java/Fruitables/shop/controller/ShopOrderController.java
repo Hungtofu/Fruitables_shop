@@ -30,6 +30,7 @@ public class ShopOrderController {
         this.shopOrderService = shopOrderService;
     }
 
+    /*
     @PostMapping("/product_item")
     public ResponseEntity<Boolean> addProduct(@RequestParam int productId, @RequestBody ShopOrderDTO shopOrderDTO,@RequestParam int qty, @RequestParam Double price)
     {
@@ -43,6 +44,8 @@ public class ShopOrderController {
         boolean success = shopOrderService.addProductToUserShopOrder(email, shopOrderDTO, product, qty, price);
         return ResponseEntity.status(HttpStatus.OK.value()).body(success);
     }
+    /
+     */
 
     @PostMapping("/cart_item")
     public ResponseEntity<?> createShopOrderFromCart() {
@@ -54,13 +57,23 @@ public class ShopOrderController {
         return ResponseEntity.status(HttpStatus.OK.value()).body(success);
     }
 
-    @GetMapping("/items")
-    public ResponseEntity<?> getItemByShopOrder() {
+    @GetMapping("/orders")
+    public ResponseEntity<?> getShopOrdersOfTheUser() {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
         if (email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);
         }
-        List<ShopOrderItemDTO> shopOrderItemDTOList = shopOrderService.getShopOrderItemByUser(email);
+        List<ShopOrderDTO> shopOrderDTOList = shopOrderService.getShopOrdersOfAUser(email);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(shopOrderDTOList);
+    }
+
+    @GetMapping("/order/{shopOrderId}")
+    public ResponseEntity<?> getAShopOrder(@RequestParam int shopOrderId) {
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
+        if (email.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK.value()).body(null);
+        }
+        List<ShopOrderItemDTO> shopOrderItemDTOList = shopOrderService.getShopOrderItemsOfAShopOrder(email, shopOrderId);
         return ResponseEntity.status(HttpStatus.OK.value()).body(shopOrderItemDTOList);
     }
 }
