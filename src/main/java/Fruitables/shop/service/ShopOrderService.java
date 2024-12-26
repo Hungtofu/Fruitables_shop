@@ -24,14 +24,14 @@ public class ShopOrderService {
     private final ImgUtil imgUtil;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
-    private final UserPaymentMethodRepository userPaymentMethodRepository;
+    private final PaymentTypeRepository paymentTypeRepository;
     private final DeliveryInformationRepository deliveryInformationRepository;
     private final ShippingMethodRepository shippingMethodRepository;
     private final OrderStatusRepository orderStatusRepository;
     private final ProductRepository productRepository;
 
 
-    public ShopOrderService(UserService userService, ShopOrderRepository shopOrderRepository, ShopOrderItemRepository shopOrderItemRepository, ImgUtil imgUtil, CartRepository cartRepository, CartItemRepository cartItemRepository, UserPaymentMethodRepository userPaymentMethodRepository, DeliveryInformationRepository deliveryInformationRepository, ShippingMethodRepository shippingMethodRepository, OrderStatusRepository orderStatusRepository, ProductRepository productRepository)
+    public ShopOrderService(UserService userService, ShopOrderRepository shopOrderRepository, ShopOrderItemRepository shopOrderItemRepository, ImgUtil imgUtil, CartRepository cartRepository, CartItemRepository cartItemRepository, PaymentTypeRepository paymentTypeRepository, DeliveryInformationRepository deliveryInformationRepository, ShippingMethodRepository shippingMethodRepository, OrderStatusRepository orderStatusRepository, ProductRepository productRepository)
     {
         this.userService = userService;
         this.shopOrderRepository = shopOrderRepository;
@@ -39,7 +39,7 @@ public class ShopOrderService {
         this.imgUtil = imgUtil;
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
-        this.userPaymentMethodRepository = userPaymentMethodRepository;
+        this.paymentTypeRepository = paymentTypeRepository;
         this.deliveryInformationRepository = deliveryInformationRepository;
         this.shippingMethodRepository = shippingMethodRepository;
         this.orderStatusRepository = orderStatusRepository;
@@ -130,7 +130,7 @@ public class ShopOrderService {
         return shopOrderItemDTOList;
     }
 
-    public boolean createShopOrderFromCart(String email, int paymentMethodId, int shippingAddressId, int shippingMethodId, int orderStatusId)
+    public boolean createShopOrderFromCart(String email, int paymentId, int shippingAddressId, int shippingMethodId, int orderStatusId)
     {
 
         User user = userService.findByEmail(email);
@@ -144,7 +144,7 @@ public class ShopOrderService {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             LocalDate localDate = LocalDate.now();
             shopOrder.setOrderDate(dtf.format(localDate));
-            shopOrder.setPaymentMethod(userPaymentMethodRepository.findById(paymentMethodId));
+            shopOrder.setPaymentType(paymentTypeRepository.findById(paymentId));
             shopOrder.setShippingAddress(deliveryInformationRepository.findById(shippingAddressId));
             shopOrder.setShippingMethod(shippingMethodRepository.findById(shippingMethodId));
             shopOrder.setOrderStatus(orderStatusRepository.findById(orderStatusId));
