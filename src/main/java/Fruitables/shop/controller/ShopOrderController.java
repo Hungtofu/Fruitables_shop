@@ -1,5 +1,6 @@
 package Fruitables.shop.controller;
 
+import Fruitables.shop.dto.OrderHistoryDTO;
 import Fruitables.shop.dto.ShopOrderDTO;
 import Fruitables.shop.dto.ShopOrderItemDTO;
 import Fruitables.shop.entity.Product;
@@ -49,7 +50,7 @@ public class ShopOrderController {
         if (email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);
         }
-        boolean success = shopOrderService.createShopOrderFromCart(email, paymentMethodId, shippingAddressId, shippingMethodId, orderStatusId);
+        boolean success = shopOrderService.createShopOrderFromCart(email, paymentMethodId, shippingAddressId, shippingMethodId);
         return ResponseEntity.status(HttpStatus.OK.value()).body(success);
     }
 
@@ -59,7 +60,7 @@ public class ShopOrderController {
         if (email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);
         }
-        List<ShopOrderDTO> shopOrderDTOList = shopOrderService.getShopOrdersOfAUser(email);
+        List<OrderHistoryDTO> shopOrderDTOList = shopOrderService.getShopOrdersOfAUser(email);
         return ResponseEntity.status(HttpStatus.OK.value()).body(shopOrderDTOList);
     }
 

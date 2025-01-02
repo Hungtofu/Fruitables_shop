@@ -13,6 +13,7 @@ import lombok.Setter;
 public class OrderStatusDTO {
     private int id;
     private String status;
+
     public OrderStatusDTO(OrderStatus orderStatus)
     {
         this.id = orderStatus.getId();

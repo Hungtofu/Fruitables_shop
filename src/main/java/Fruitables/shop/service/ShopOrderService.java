@@ -1,9 +1,6 @@
 package Fruitables.shop.service;
 
-import Fruitables.shop.dto.CartItemDTO;
-import Fruitables.shop.dto.ProductDTO;
-import Fruitables.shop.dto.ShopOrderDTO;
-import Fruitables.shop.dto.ShopOrderItemDTO;
+import Fruitables.shop.dto.*;
 import Fruitables.shop.entity.*;
 import Fruitables.shop.repository.*;
 import Fruitables.shop.util.ImgUtil;
@@ -11,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -78,7 +76,7 @@ public class ShopOrderService {
     /
 
      */
-    public List<ShopOrderDTO> getShopOrdersOfAUser(String email)
+    public List<OrderHistoryDTO> getShopOrdersOfAUser(String email)
     {
         /*
         private int id;
@@ -92,21 +90,16 @@ public class ShopOrderService {
          */
         User user = userService.findByEmail(email);
         List<ShopOrder> orderList = shopOrderRepository.findByUser(user);
-        List<ShopOrderDTO> orderDTOList = new ArrayList<>();
+        List<OrderHistoryDTO> orderHistoryDTO = new ArrayList<>();
         for (ShopOrder s : orderList)
         {
-            ShopOrderDTO shopOrderDTO = new ShopOrderDTO();
-            shopOrderDTO.setId(s.getId());
-            shopOrderDTO.setUser(user);
-            shopOrderDTO.setTimestamp(s.getTimestamp());
-            shopOrderDTO.setPaymentMethodId(s.getPaymentMethodId());
-            shopOrderDTO.setShippingAddressId(s.getShippingAddressId());
-            shopOrderDTO.setShippingMethodId(s.getShippingMethodId());
-            shopOrderDTO.setOrderTotal(s.getOrderTotal());
-            shopOrderDTO.setOrderStatusId(s.getOrderStatusId());
-            orderDTOList.add(shopOrderDTO);
+            OrderHistoryDTO order = new OrderHistoryDTO();
+            order.setId(s.getId());
+            order.setTotal(s.getOrderTotal());
+            order.setStatus(new OrderStatusDTO(s.getOrderStatus()));
+            orderHistoryDTO.add(order);
         }
-        return orderDTOList;
+        return orderHistoryDTO;
     }
 
     public List<ShopOrderItemDTO> getShopOrderItemsOfAShopOrder(String email, int shopOrderId)
@@ -121,56 +114,57 @@ public class ShopOrderService {
             ShopOrderItemDTO shopOrderItemDTO = new ShopOrderItemDTO();
             shopOrderItemDTO.setId(s.getId());
             shopOrderItemDTO.setQty(s.getQty());
-            shopOrderItemDTO.setProductDTO(new ProductDTO(s.getProduct()));
+            shopOrderItemDTO.setProduct(new ProductDTO(s.getProduct()));
             shopOrderItemDTO.setPrice(s.getPrice());
             shopOrderItemDTO.setShopOrderId(shopOrderId);
             shopOrderItemDTOList.add(shopOrderItemDTO);
-            shopOrderItemDTO.setImage(imgUtil.getOneProductImage(s.getProduct()));
         }
         return shopOrderItemDTOList;
     }
 
-    public boolean createShopOrderFromCart(String email, int paymentId, int shippingAddressId, int shippingMethodId, int orderStatusId)
+    public boolean createShopOrderFromCart(String email, int paymentId, int shippingAddressId, int shippingMethodId)
     {
+        try {
+            User user = userService.findByEmail(email);
+            Cart cart = cartRepository.findByUser(user);
+            double total = 0.0;
+            List<CartItem> cartItemList = cartItemRepository.findByCart(cart);
+            if (cartItemList != null) {
+                ShopOrder currentShopOrder = new ShopOrder();
+                currentShopOrder.setUser(user);
+                currentShopOrder.setOrderDate(Timestamp.from(Instant.now()));
+                currentShopOrder.setPaymentMethod(paymentTypeRepository.findById(paymentId));
+                currentShopOrder.setShippingAddress(deliveryInformationRepository.findById(shippingAddressId));
+                currentShopOrder.setShippingMethod(shippingMethodRepository.findById(shippingMethodId));
+                currentShopOrder.setOrderStatus(orderStatusRepository.findById(4));
 
-        User user = userService.findByEmail(email);
-        Cart cart = cartRepository.findByUser(user);
-        Double total = 0.0;
-        Double price = 0.0;
-        List<CartItem> cartItemList = cartItemRepository.findByCart(cart);
-        if (cartItemList != null) {
-            ShopOrder shopOrder = new ShopOrder();
-            shopOrder.setUser(user);
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate localDate = LocalDate.now();
-            shopOrder.setOrderDate(dtf.format(localDate));
-            shopOrder.setPaymentType(paymentTypeRepository.findById(paymentId));
-            shopOrder.setShippingAddress(deliveryInformationRepository.findById(shippingAddressId));
-            shopOrder.setShippingMethod(shippingMethodRepository.findById(shippingMethodId));
-            shopOrder.setOrderStatus(orderStatusRepository.findById(orderStatusId));
-            shopOrder.setOrderTotal(0.0);
-            shopOrderRepository.save(shopOrder);
-            for (CartItem c : cartItemList) {
-                Product product = productRepository.findById(c.getProduct().getId());
-                if (product.getQtyInStock() - c.getQty() >= 0) {
-                    ShopOrderItem shopOrderItem = new ShopOrderItem();
-                    // shopOrderItem.setId(c.getId());
-                    shopOrderItem.setQty(c.getQty());
-                    shopOrderItem.setProduct(productRepository.findById(c.getProduct().getId()));
-                    product.setQtyInStock(product.getQtyInStock() - c.getQty());
-                    shopOrderItem.setShopOrder(shopOrderRepository.findByUserAndId(user, shopOrder.getId()));
-                    shopOrderItem.setPrice(c.getProduct().getPrice());
-                    price = c.getPrice() * c.getQty();
-                    total = total + price;
+                for (CartItem c : cartItemList) {
+                    Product product = productRepository.findById(c.getProduct().getId());
+                    if (product.getQtyInStock() - c.getQty() >= 0) {
+                        ShopOrderItem shopOrderItem = new ShopOrderItem();
 
-                    shopOrderItemRepository.save(shopOrderItem);
-                    productRepository.save(product);
+                        shopOrderItem.setShopOrder(currentShopOrder);
+                        shopOrderItem.setQty(c.getQty());
+                        shopOrderItem.setProduct(c.getProduct());
+                        shopOrderItem.setPrice(c.getProduct().getPrice() * c.getQty());
+
+                        product.setQtyInStock(product.getQtyInStock() - c.getQty());
+                        total = total + c.getQty()*c.getProduct().getPrice() + currentShopOrder.getShippingMethod().getPrice();
+
+                        shopOrderItemRepository.save(shopOrderItem);
+                        productRepository.save(product);
+                    }
                 }
+
+                currentShopOrder.setOrderTotal(total);
+                shopOrderRepository.save(currentShopOrder);
+                return true;
             }
-            shopOrder.setOrderTotal(total);
-            shopOrderRepository.save(shopOrder);
-            return true;
+            return false;
+        } catch (Exception e){
+            System.out.println("Erorr payment: " + e.getMessage());
         }
         return false;
+
     }
 }

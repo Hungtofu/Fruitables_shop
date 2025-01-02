@@ -588,6 +588,8 @@ use fruitables_shop_db;
 
 select * from user;
 
+select * from order_status;
+
 select * from category;
 
 select * from product;
@@ -600,3 +602,4 @@ select * from cart_item;
 
 select * from user_review;
 
+	

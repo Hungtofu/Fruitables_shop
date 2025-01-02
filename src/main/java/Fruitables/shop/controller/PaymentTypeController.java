@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin("*")
 @RequestMapping("/payment_type")
 public class PaymentTypeController {
+
     private final PaymentTypeService paymentTypeService;
+
     public PaymentTypeController(PaymentTypeService paymentTypeService)
     {
         this.paymentTypeService = paymentTypeService;
@@ -22,8 +24,6 @@ public class PaymentTypeController {
 
     @GetMapping("/getall")
     public ResponseEntity<?> getAllPayment() {
-        RestResponse<Object> response = new RestResponse<Object>();
-        response.setData(paymentTypeService.getAllPaymentType());
-        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(paymentTypeService.getAllPaymentType());
     }
 }

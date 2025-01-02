@@ -71,7 +71,10 @@ public class SecurityConfiguration {
                                 "/login/**",
                                 "/category/**",
                                 "/product/**",
-                                "/review/**").permitAll()
+                                "/review/**",
+                                "/payment_type/**",
+                                "/shipping_method/**",
+                                "/order_status/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())

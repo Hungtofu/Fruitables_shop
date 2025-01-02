@@ -1,18 +1,17 @@
-package Fruitables.shop.dto;
+package Fruitables.shop.payload.Request;
 
-import Fruitables.shop.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeliveryInformationDTO {
+public class AddDeliveryInformationRequest {
 
-    private int id;
     private String firstName;
     private String lastName;
     private String phoneNumbers;
@@ -21,4 +20,5 @@ public class DeliveryInformationDTO {
     private String commune;
     private String district;
     private String province;
+
 }

@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ShopOrderItemDTO {
     private int id;
-    private Product product;
+    private ProductDTO product;
     private int shopOrderId;
     private int qty;
     private Double price;

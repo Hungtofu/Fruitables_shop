@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShopOrderDTO {
+
     private int id;
     private User user;
     private Timestamp orderDate;
@@ -22,4 +23,5 @@ public class ShopOrderDTO {
     private int shippingMethodId;
     private Double orderTotal;
     private int orderStatusId;
+
 }

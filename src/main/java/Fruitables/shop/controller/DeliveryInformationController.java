@@ -1,6 +1,7 @@
 package Fruitables.shop.controller;
 
 import Fruitables.shop.dto.DeliveryInformationDTO;
+import Fruitables.shop.payload.Request.AddDeliveryInformationRequest;
 import Fruitables.shop.service.DeliveryInformationService;
 import Fruitables.shop.util.SecurityUtil;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,8 @@ public class DeliveryInformationController {
         this.deliveryService = deliveryService;
     }
 
-    @PostMapping("/item")
-    public ResponseEntity<Boolean> addDelivery(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String phoneNumbers, @RequestParam String address1, @RequestParam String address2, @RequestParam String commune, @RequestParam String district, @RequestParam String province)
+    @PostMapping("/create")
+    public ResponseEntity<Boolean> addDelivery(@RequestBody AddDeliveryInformationRequest request)
     {
         String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
         if(email.isEmpty()){
@@ -28,7 +29,7 @@ public class DeliveryInformationController {
                     .body(null);
         }
         // deliveryService.saveUserDeliveryInfo(email, delivery);
-        boolean success = deliveryService.addDeliveryInfo(email, firstName, lastName, phoneNumbers, address1, address2, commune, district, province);
+        boolean success = deliveryService.addDeliveryInfo(email, request);
         return ResponseEntity.status(HttpStatus.OK.value()).body(success);
     }
 

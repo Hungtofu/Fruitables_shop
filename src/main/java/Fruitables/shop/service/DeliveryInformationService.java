@@ -3,6 +3,7 @@ package Fruitables.shop.service;
 import Fruitables.shop.dto.DeliveryInformationDTO;
 import Fruitables.shop.entity.DeliveryInformation;
 import Fruitables.shop.entity.User;
+import Fruitables.shop.payload.Request.AddDeliveryInformationRequest;
 import Fruitables.shop.repository.DeliveryInformationRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,18 +20,29 @@ public class DeliveryInformationService {
         this.userService = userService;
     }
 
-    public boolean addDeliveryInfo(String email, String firstName, String lastName, String phoneNumbers, String address1, String address2, String commune, String district, String province)
+    public boolean addDeliveryInfo(String email, AddDeliveryInformationRequest request)
     {
         User user = userService.findByEmail(email);
-        DeliveryInformation deli = new DeliveryInformation(user, firstName, lastName, phoneNumbers, address1, address2, commune, district, province);
-        try {
-            deliveryInformationRepository.save(deli);
-            return true;
+        if(user != null){
+            DeliveryInformation deli = new DeliveryInformation(user,
+                    request.getFirstName(),
+                    request.getLastName(),
+                    request.getPhoneNumbers(),
+                    request.getAddress1(),
+                    request.getAddress2(),
+                    request.getCommune(),
+                    request.getDistrict(),
+                    request.getProvince());
+            try {
+                deliveryInformationRepository.save(deli);
+                return true;
+            }
+            catch (Exception e) {
+                System.out.print("Error add delivery information: " + e.getMessage());
+                return false;
+            }
         }
-        catch (Exception e) {
-            System.out.print("Error save cart item: " + e.getMessage());
-            return false;
-        }
+        return false;
     }
 
     /*
@@ -63,7 +75,6 @@ public class DeliveryInformationService {
 
         for (DeliveryInformation d : deliveryInformationList) {
             DeliveryInformationDTO de = new DeliveryInformationDTO();
-            de.setUser(user);
             de.setFirstName(d.getFirstName());
             de.setLastName(d.getLastName());
             de.setPhoneNumbers(d.getPhoneNumbers());
