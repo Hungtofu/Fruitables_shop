@@ -18,12 +18,8 @@ public class ProductDTO {
 
     private int id;
     private String name;
-<<<<<<< HEAD
-    private double price;
-=======
     private Long qtyInStock;
     private Double price;
->>>>>>> hoang_gokublack
     private String description;
     private String image;
 

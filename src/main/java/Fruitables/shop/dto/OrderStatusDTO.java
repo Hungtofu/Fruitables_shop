@@ -16,6 +16,6 @@ public class OrderStatusDTO {
     public OrderStatusDTO(OrderStatus orderStatus)
     {
         this.id = orderStatus.getId();
-        this.status = orderStatus.getName();
+        this.status = orderStatus.getStatus();
     }
 }

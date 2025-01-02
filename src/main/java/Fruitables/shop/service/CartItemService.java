@@ -6,15 +6,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
-<<<<<<< HEAD
-
     private final CartItemRepository cartItemRepo;
 
-
-=======
-    private final CartItemRepository cartItemRepo;
-
->>>>>>> hoang_gokublack
     public CartItemService(CartItemRepository cartItemRepository) {
         this.cartItemRepo = cartItemRepository;
     }
@@ -46,8 +39,4 @@ public class CartItemService {
         }
         return false;
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> hoang_gokublack
 }
