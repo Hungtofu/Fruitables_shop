@@ -45,4 +45,16 @@ public class DeliveryInformation {
     @Column(name = "province", length = 65)
     private String province;
 
+    public DeliveryInformation(User user, String firstName, String lastName, String phoneNumbers, String address1, String address2, String commune, String district, String province)
+    {
+        this.user = user;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumbers = phoneNumbers;
+        this.address1 = address1;
+        this.address2 = address2;
+        this.commune = commune;
+        this.district = district;
+        this.province = province;
+    }
 }

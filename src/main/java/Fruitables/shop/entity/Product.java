@@ -30,7 +30,11 @@ public class Product {
     private int qtyInStock;
 
     @Column(name = "price")
+<<<<<<< HEAD
     private double price;
+=======
+    private Double price;
+>>>>>>> hoang_gokublack
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;

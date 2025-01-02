@@ -1,31 +1,36 @@
 use fruitables_shop_db;
 
-insert into user(email, password, user_name) values("admin1@gmail.com", "$2a$12$DYtDBdlwz4qxLkz7EOPiMup37uzU.a6Y3bImO8h3CvDAnMPhCrwUa", "admin1");
-insert into user(email, password, user_name) values("admin2@gmail.com", "$2a$12$DYtDBdlwz4qxLkz7EOPiMup37uzU.a6Y3bImO8h3CvDAnMPhCrwUa", "admin2");
-insert into user(email, password, user_name) values("admin3@gmail.com", "$2a$12$DYtDBdlwz4qxLkz7EOPiMup37uzU.a6Y3bImO8h3CvDAnMPhCrwUa", "admin3");
-insert into user(email, password, user_name) values("user1@gmail.com", "$2a$12$DYtDBdlwz4qxLkz7EOPiMup37uzU.a6Y3bImO8h3CvDAnMPhCrwUa", "user1");
-insert into user(email, password, user_name) values("user2@gmail.com", "$2a$12$DYtDBdlwz4qxLkz7EOPiMup37uzU.a6Y3bImO8h3CvDAnMPhCrwUa", "user2");
+insert into user(email, password, user_name) values
+("admin1@gmail.com", "$2a$12$DYtDBdlwz4qxLkz7EOPiMup37uzU.a6Y3bImO8h3CvDAnMPhCrwUa", "admin1"),
+("admin2@gmail.com", "$2a$12$DYtDBdlwz4qxLkz7EOPiMup37uzU.a6Y3bImO8h3CvDAnMPhCrwUa", "admin2"),
+("admin3@gmail.com", "$2a$12$DYtDBdlwz4qxLkz7EOPiMup37uzU.a6Y3bImO8h3CvDAnMPhCrwUa", "admin3"),
+("user1@gmail.com", "$2a$12$DYtDBdlwz4qxLkz7EOPiMup37uzU.a6Y3bImO8h3CvDAnMPhCrwUa", "user1"),
+("user2@gmail.com", "$2a$12$DYtDBdlwz4qxLkz7EOPiMup37uzU.a6Y3bImO8h3CvDAnMPhCrwUa", "user2");
 
-insert into delivery_information(user_id, first_name, last_name, phone_numbers, address1, address2, commune, district, province) values (4, "A", "Nguyen Van", "0123456789", "KTX khu B", "Đg Mạc Đĩnh Chi", "Đông Hòa", "Dĩ An", "Bình Dương");
-insert into delivery_information(user_id, first_name, last_name, phone_numbers, address1, address2, commune, district, province) values (4, "B", "Nguyen Van", "0123456789", "Tổ 1", "Đg ABCD", "Hòa Hiệp", "Xuyên Mộc", "Bà Rịa - Vũng Tàu");
+insert into delivery_information(user_id, first_name, last_name, phone_numbers, address1, address2, commune, district, province) values 
+(4, "A", "Nguyen Van", "0123456789", "KTX khu B", "Đg Mạc Đĩnh Chi", "Đông Hòa", "Dĩ An", "Bình Dương"),
+(4, "B", "Nguyen Van", "0123456789", "Tổ 1", "Đg ABCD", "Hòa Hiệp", "Xuyên Mộc", "Bà Rịa - Vũng Tàu");
 
-insert into category(name) values ("Tropical Fruits");
-insert into category(name) values ("Stone Fruits");
-insert into category(name) values ("Leafy Greens");
-insert into category(name) values ("Root Vegetables");
-insert into category(name) values ("Herbs");
+insert into category(name) values 
+("Tropical Fruits"),
+("Stone Fruits"),
+("Leafy Greens"),
+("Root Vegetables"),
+("Herbs");
 
-insert into payment_type(name) values("Cash on delivery");
-insert into payment_type(name) values("Onine payment");
+insert into payment_type(name) values
+("Cash on delivery"),
+("Onine payment");
 
+insert into shipping_method(name, price) values
+("Normal", 2),
+("Fast", 4);
 
-insert into shipping_method(name, price) values("Normal", 2);
-insert into shipping_method(name, price) values("Fast", 4);
-
-insert into order_status(status) values("Shipped");
-insert into order_status(status) values("Delivered");
-insert into order_status(status) values("Canceled");
-insert into order_status(status) values("Pending");
+insert into order_status(status) values
+("Shipped"),
+("Delivered"),
+("Canceled"),
+("Pending");
 
 -- Trái cây nhiệt đới (Tropical Fruits)
 -- Mango
