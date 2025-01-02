@@ -21,10 +21,12 @@ public class ProductService {
 
     private final ProductRepository productRepo;
     private final ImgUtil imgUtil;
+    private final UserReviewService userReviewService;
 
-    public ProductService(ProductRepository productRepo, ImgUtil imgUtil) {
+    public ProductService(ProductRepository productRepo, ImgUtil imgUtil, UserReviewService userReviewService) {
         this.productRepo = productRepo;
         this.imgUtil = imgUtil;
+        this.userReviewService = userReviewService;
     }
 
     public Product getById(int id){
@@ -79,6 +81,8 @@ public class ProductService {
                 imgURL.add(i.getUrl());
             }
             productDetailDTO.setImage(imgURL);
+
+
 
             return productDetailDTO;
         }

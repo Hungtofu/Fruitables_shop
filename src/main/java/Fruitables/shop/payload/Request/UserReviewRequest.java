@@ -7,7 +7,9 @@ import lombok.Setter;
 @Setter
 public class UserReviewRequest {
 
-    private int shopOrderItemId;
+    private int productId;
+    private String name;
+    private String email;
     private int ratingValue;
     private String cmt;
 

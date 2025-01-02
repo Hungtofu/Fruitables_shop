@@ -22,13 +22,6 @@ public class ProductDetailDTO {
     private double price;
     private String description;
     private List<String> image;
+    private double ratingPoint;
 
-    public ProductDetailDTO(CategoryDTO category, String name, int qtyInStock, double price, String description, List<String> image) {
-        this.category = category;
-        this.name = name;
-        this.qtyInStock = qtyInStock;
-        this.price = price;
-        this.description = description;
-        this.image = image;
-    }
 }

@@ -70,7 +70,8 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/login/**",
                                 "/category/**",
-                                "/product/**").permitAll()
+                                "/product/**",
+                                "/review/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())

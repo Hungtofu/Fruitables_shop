@@ -22,8 +22,14 @@ public class UserReview {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "ordered_product_id")
-    private ShopOrderItem orderProduct;
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @Column(name = "name", length = 65)
+    private String name;
+
+    @Column(name = "email", length = 65)
+    private String email;
 
     @Column(name = "rating_value")
     private int ratingValue;

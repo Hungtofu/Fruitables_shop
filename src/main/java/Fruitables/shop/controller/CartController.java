@@ -3,6 +3,7 @@ package Fruitables.shop.controller;
 import Fruitables.shop.dto.CartItemDTO;
 import Fruitables.shop.entity.CartItem;
 import Fruitables.shop.entity.Product;
+import Fruitables.shop.payload.Request.AddToCartRequest;
 import Fruitables.shop.service.CartItemService;
 import Fruitables.shop.service.CartService;
 import Fruitables.shop.service.ProductService;
@@ -29,13 +30,13 @@ public class CartController {
     }
 
     @PostMapping("/additem")
-    public ResponseEntity<Boolean> addProduct(@RequestParam int productId, @RequestParam int qty){
+    public ResponseEntity<Boolean> addProduct(@RequestBody AddToCartRequest request){
         String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
-        Product product = productService.getById(productId);
-        if(email.isEmpty() || product == null || product.getQtyInStock() < qty){
+        Product product = productService.getById(request.getProductId());
+        if(email.isEmpty() || product == null || product.getQtyInStock() < request.getQty()){
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);
         }
-        return ResponseEntity.status(HttpStatus.OK.value()).body( cartService.addProductToUserCart(email, product, qty));
+        return ResponseEntity.status(HttpStatus.OK.value()).body( cartService.addProductToUserCart(email, product, request.getQty()));
     }
 
     @PostMapping("/item/increase")

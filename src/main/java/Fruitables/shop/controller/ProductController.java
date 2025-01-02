@@ -40,7 +40,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK.value()).body(productService.getProductByFilter(spec, pageable));
     }
 
-    @PostMapping("/getdetail/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<ProductDetailDTO> getDetail(@PathVariable int id){
         return ResponseEntity.status(HttpStatus.OK.value()).body(productService.getDetail(id));
     }
