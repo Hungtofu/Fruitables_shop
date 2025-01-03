@@ -2,15 +2,12 @@ package Fruitables.shop.service;
 
 import Fruitables.shop.dto.*;
 import Fruitables.shop.entity.*;
+import Fruitables.shop.payload.Request.PaymentRequest;
 import Fruitables.shop.repository.*;
-import Fruitables.shop.util.ImgUtil;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +16,6 @@ public class ShopOrderService {
     private final UserService userService;
     private final ShopOrderRepository shopOrderRepository;
     private final ShopOrderItemRepository shopOrderItemRepository;
-    private final ImgUtil imgUtil;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final PaymentTypeRepository paymentTypeRepository;
@@ -27,14 +23,14 @@ public class ShopOrderService {
     private final ShippingMethodRepository shippingMethodRepository;
     private final OrderStatusRepository orderStatusRepository;
     private final ProductRepository productRepository;
+    private final UserPaymentMethodRepository userPaymentMethodRepo;
 
 
-    public ShopOrderService(UserService userService, ShopOrderRepository shopOrderRepository, ShopOrderItemRepository shopOrderItemRepository, ImgUtil imgUtil, CartRepository cartRepository, CartItemRepository cartItemRepository, PaymentTypeRepository paymentTypeRepository, DeliveryInformationRepository deliveryInformationRepository, ShippingMethodRepository shippingMethodRepository, OrderStatusRepository orderStatusRepository, ProductRepository productRepository)
+    public ShopOrderService(UserService userService, ShopOrderRepository shopOrderRepository, ShopOrderItemRepository shopOrderItemRepository, CartRepository cartRepository, CartItemRepository cartItemRepository, PaymentTypeRepository paymentTypeRepository, DeliveryInformationRepository deliveryInformationRepository, ShippingMethodRepository shippingMethodRepository, OrderStatusRepository orderStatusRepository, ProductRepository productRepository, UserPaymentMethodRepository userPaymentMethodRepo)
     {
         this.userService = userService;
         this.shopOrderRepository = shopOrderRepository;
         this.shopOrderItemRepository = shopOrderItemRepository;
-        this.imgUtil = imgUtil;
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.paymentTypeRepository = paymentTypeRepository;
@@ -42,6 +38,7 @@ public class ShopOrderService {
         this.shippingMethodRepository = shippingMethodRepository;
         this.orderStatusRepository = orderStatusRepository;
         this.productRepository = productRepository;
+        this.userPaymentMethodRepo = userPaymentMethodRepo;
     }
 
     /*
@@ -122,7 +119,7 @@ public class ShopOrderService {
         return shopOrderItemDTOList;
     }
 
-    public boolean createShopOrderFromCart(String email, int paymentId, int shippingAddressId, int shippingMethodId)
+    public boolean createShopOrderFromCart(String email, PaymentRequest request)
     {
         try {
             User user = userService.findByEmail(email);
@@ -133,11 +130,11 @@ public class ShopOrderService {
                 ShopOrder currentShopOrder = new ShopOrder();
                 currentShopOrder.setUser(user);
                 currentShopOrder.setOrderDate(Timestamp.from(Instant.now()));
-                currentShopOrder.setPaymentMethod(paymentTypeRepository.findById(paymentId));
-                currentShopOrder.setShippingAddress(deliveryInformationRepository.findById(shippingAddressId));
-                currentShopOrder.setShippingMethod(shippingMethodRepository.findById(shippingMethodId));
-                currentShopOrder.setOrderStatus(orderStatusRepository.findById(4));
-
+                currentShopOrder.setPaymentMethod(userPaymentMethodRepo.findById(request.getUserPaymentMethodId()));
+                currentShopOrder.setShippingAddress(deliveryInformationRepository.findById(request.getShippingAddressId()));
+                currentShopOrder.setShippingMethod(shippingMethodRepository.findById(request.getShippingMethodId()));
+                currentShopOrder.setOrderStatus(orderStatusRepository.findById(request.getOrderStatusId()));
+                shopOrderRepository.save(currentShopOrder);
                 for (CartItem c : cartItemList) {
                     Product product = productRepository.findById(c.getProduct().getId());
                     if (product.getQtyInStock() - c.getQty() >= 0) {
@@ -149,14 +146,15 @@ public class ShopOrderService {
                         shopOrderItem.setPrice(c.getProduct().getPrice() * c.getQty());
 
                         product.setQtyInStock(product.getQtyInStock() - c.getQty());
-                        total = total + c.getQty()*c.getProduct().getPrice() + currentShopOrder.getShippingMethod().getPrice();
+                        total = c.getQty()*c.getProduct().getPrice();
 
                         shopOrderItemRepository.save(shopOrderItem);
                         productRepository.save(product);
                     }
+                    cartItemRepository.delete(c);
                 }
 
-                currentShopOrder.setOrderTotal(total);
+                currentShopOrder.setOrderTotal(total + currentShopOrder.getShippingMethod().getPrice());
                 shopOrderRepository.save(currentShopOrder);
                 return true;
             }

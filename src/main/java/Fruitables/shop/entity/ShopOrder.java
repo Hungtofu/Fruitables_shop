@@ -29,7 +29,7 @@ public class ShopOrder {
 
     @ManyToOne
     @JoinColumn(name = "payment_method")
-    private PaymentType paymentMethod;
+    private UserPaymentMethod paymentMethod;
 
     @ManyToOne
     @JoinColumn(name = "shipping_address")

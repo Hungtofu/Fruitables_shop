@@ -75,6 +75,7 @@ public class DeliveryInformationService {
 
         for (DeliveryInformation d : deliveryInformationList) {
             DeliveryInformationDTO de = new DeliveryInformationDTO();
+            de.setId(d.getId());
             de.setFirstName(d.getFirstName());
             de.setLastName(d.getLastName());
             de.setPhoneNumbers(d.getPhoneNumbers());

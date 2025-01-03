@@ -22,6 +22,9 @@ insert into payment_type(name) values
 ("Cash on delivery"),
 ("Onine payment");
 
+insert into user_payment_method(user_id, payment_type_id, provider, account_number, expiry_date, is_default) values
+(4, 1, null, null, null, true);
+
 insert into shipping_method(name, price) values
 ("Normal", 2),
 ("Fast", 4);
@@ -592,11 +595,15 @@ select * from order_status;
 
 select * from category;
 
+select * from delivery_information;
+
 select * from product;
 
 select * from image;
 
 select * from cart;
+
+select * from shop_order;
 
 select * from cart_item;
 
