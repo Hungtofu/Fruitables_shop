@@ -171,3 +171,36 @@ async function fetchAdtoCart(productId, token, qty) {
     return null;
   }
 }
+
+async function postReview(){
+  var searchParams = new URLSearchParams(window.location.search);
+  var productId = searchParams.get("id");
+  const request = {
+    productId: productId,
+    name: document.getElementById("usrer_review_name").value,
+    email: document.getElementById("usrer_review_email").value,
+    ratingValue: document.getElementById("rating_point").value,
+    cmt: document.getElementById("user_review").value
+  }
+  console.log(request);
+  try {
+    const response = await fetch(`http://localhost:8080/review/post`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    });
+    const data = await response.json();
+    if (data.statusCode == 200) {
+      alert("post successful")
+      return data;
+    }
+    if (data.statusCode == 401) {
+      alert("error");
+    }
+    return null;
+  } catch (error) {
+    return null;
+  }
+}

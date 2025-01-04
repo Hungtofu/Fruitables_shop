@@ -67,7 +67,6 @@ public class LoginController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserLoginDTO userLoginDTO = new UserLoginDTO();
-
         User user = userService.findByEmail(signInRequest.getEmail());
         UserLoginDTO.UserInfo currentUserDTO = new UserLoginDTO.UserInfo(
                 user.getId(),
