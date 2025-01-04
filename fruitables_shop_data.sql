@@ -99,7 +99,8 @@ insert into product(category_id, name, qty_in_stock, price, description) values(
   (11, "Dừa dứa_2.jpg"),
   (11, "Dừa dứa_3.jpg");
 insert into product(category_id, name, qty_in_stock, price, description) values(1, "Dừa sáp", 100, 2, "");
-  insert into image(product_id, url) values (12, "Dừa sáp.jpg"),
+  insert into image(product_id, url) values 
+  (12, "Dừa sáp.jpg"),
   (12, "Dừa sáp_1.jpg"),
   (12, "Dừa sáp_2.jpg"),
   (12, "Dừa sáp_3.jpg");
@@ -604,6 +605,8 @@ select * from image;
 select * from cart;
 
 select * from shop_order;
+
+select * from shop_order_item;
 
 select * from cart_item;
 

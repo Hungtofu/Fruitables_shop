@@ -39,22 +39,22 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK.value()).body( cartService.addProductToUserCart(email, product, request.getQty()));
     }
 
-    @PostMapping("/item/increase")
-    public ResponseEntity<Boolean> increaseQty(@RequestParam int cartItemId){
+    @PostMapping("/item/increase/{id}")
+    public ResponseEntity<Boolean> increaseQty(@PathVariable int id){
         String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
         if(email.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);
         }
-        return ResponseEntity.status(HttpStatus.OK.value()).body(cartItemService.increaseQty(cartItemId));
+        return ResponseEntity.status(HttpStatus.OK.value()).body(cartItemService.increaseQty(id));
     }
 
-    @PostMapping("/item/decrease")
-    public ResponseEntity<Boolean> decreaseQty(@RequestParam int cartItemId){
+    @PostMapping("/item/decrease/{id}")
+    public ResponseEntity<Boolean> decreaseQty(@PathVariable int id){
         String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
         if(email.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);
         }
-        return ResponseEntity.status(HttpStatus.OK.value()).body(cartItemService.decreaseQty(cartItemId));
+        return ResponseEntity.status(HttpStatus.OK.value()).body(cartItemService.decreaseQty(id));
     }
 
     @GetMapping("/items")
@@ -66,6 +66,16 @@ public class CartController {
 
         List<CartItemDTO> cartItemDTOList = cartService.getCartItemByUser(email);
         return ResponseEntity.status(HttpStatus.OK.value()).body(cartItemDTOList);
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<?> deleteCartItem(@PathVariable int id){
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()? SecurityUtil.getCurrentUserLogin().get() : "";
+        if(email.isEmpty()){
+            return ResponseEntity.status(HttpStatus.OK.value()).body(false);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(cartItemService.deleteCartItem(email, id));
     }
 
 }

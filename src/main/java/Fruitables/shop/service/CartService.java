@@ -41,7 +41,12 @@ public class CartService {
 
     public boolean addProductToUserCart(String email, Product product, int qty){
         Cart cart = initUserCart(email);
-        CartItem cartItem = new CartItem(cart, product, qty);
+        CartItem cartItem = cartItemRepo.findByProduct(product);
+        if(cartItem == null){
+            cartItem = new CartItem(cart, product, qty);
+        } else {
+            cartItem.setQty(cartItem.getQty() + qty);
+        }
         try {
             cartItemRepo.save(cartItem);
             return true;
@@ -67,5 +72,7 @@ public class CartService {
         }
         return cartItemDTOList;
     }
+
+
 
 }

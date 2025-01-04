@@ -4,8 +4,10 @@ import Fruitables.shop.dto.CategoryDTO;
 import Fruitables.shop.dto.PageProductDTO;
 import Fruitables.shop.dto.ProductDTO;
 import Fruitables.shop.dto.ProductDetailDTO;
+import Fruitables.shop.entity.Category;
 import Fruitables.shop.entity.Image;
 import Fruitables.shop.entity.Product;
+import Fruitables.shop.repository.CategoryRepository;
 import Fruitables.shop.repository.ProductRepository;
 import Fruitables.shop.util.ImgUtil;
 import org.springframework.data.domain.Page;
@@ -22,11 +24,13 @@ public class ProductService {
     private final ProductRepository productRepo;
     private final ImgUtil imgUtil;
     private final UserReviewService userReviewService;
+    private final CategoryRepository categoryRepo;
 
-    public ProductService(ProductRepository productRepo, ImgUtil imgUtil, UserReviewService userReviewService) {
+    public ProductService(ProductRepository productRepo, ImgUtil imgUtil, UserReviewService userReviewService, CategoryRepository categoryRepo) {
         this.productRepo = productRepo;
         this.imgUtil = imgUtil;
         this.userReviewService = userReviewService;
+        this.categoryRepo = categoryRepo;
     }
 
     public Product getById(int id){
@@ -38,6 +42,22 @@ public class ProductService {
         PageProductDTO pageProductDTO = new PageProductDTO();
 
         Page<Product> productPage = this.productRepo.findAll(pageable);
+        List<ProductDTO> productDTOList = convertToPageProduct(productPage);
+
+        pageProductDTO.setMeta(new PageProductDTO.Meta(pageable.getPageNumber()+ 1,
+                pageable.getPageSize(),
+                productPage.getTotalPages(),
+                productPage.getTotalElements()));
+        pageProductDTO.setProductDTOList(productDTOList);
+
+        return pageProductDTO;
+    }
+
+    public PageProductDTO getAllProductByCategoory(int id, Pageable pageable){
+
+        PageProductDTO pageProductDTO = new PageProductDTO();
+
+        Page<Product> productPage = this.productRepo.findByCategory(categoryRepo.findById(id), pageable);
         List<ProductDTO> productDTOList = convertToPageProduct(productPage);
 
         pageProductDTO.setMeta(new PageProductDTO.Meta(pageable.getPageNumber()+ 1,

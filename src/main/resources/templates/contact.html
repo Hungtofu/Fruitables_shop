@@ -88,18 +88,20 @@
                                 <input type="text"
                                        class="form-control rounded-pill search-bar pe-5"
                                        placeholder="Search..."
-                                       aria-label="Search">
+                                       aria-label="Search"
+                                       onkeypress="searchProductsHeader(event)"
+                                       id="searchHeader">
                                 <button class="btn position-absolute top-50 end-0 translate-middle-y" type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                                     </svg>
                                 </button>
                             </div>
-                            <a href="#" class="position-relative me-4 my-auto">
+                            <a href="./cart.html" class="position-relative me-4 my-auto">
                                 <i class="fa fa-shopping-bag fa-2x"></i>
                                 <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
                             </a>
-                            <a href="#" class="my-auto">
+                            <a href="./signin.html" class="my-auto" id="user_image_profile">
                                 <i class="fas fa-user fa-2x"></i>
                             </a>
                         </div>
@@ -284,6 +286,7 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="js/autoLogin.js"></script>
     <script src="js/start.js"></script>
     </body>
 

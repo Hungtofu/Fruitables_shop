@@ -33,6 +33,11 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK.value()).body(productService.getAllProduct(pageable));
     }
 
+    @PostMapping("/category/{id}")
+    public ResponseEntity<PageProductDTO> getAllProductByCategory(@PathVariable int id, Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK.value()).body(productService.getAllProductByCategoory(id, pageable));
+    }
+
     @GetMapping("/filter")
     public ResponseEntity<PageProductDTO> getProductByFilter(
             @Filter Specification<Product> spec,

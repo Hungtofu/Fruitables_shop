@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function () {
   const data = await fetchCategories();
-  generateCategories(data);
+  displayCategories(data);
 });
 
 async function fetchCategories() {
@@ -22,15 +22,31 @@ async function fetchCategories() {
   }
 }
 
-async function generateCategories(categories) {
+async function displayCategories(categories) {
   var categoryContainer = document.getElementById("category_container");
   categoryContainer.innerHTML = "";
 
   categories.forEach((category) => {
     var categoryTag = document.createElement("a");
     categoryTag.href = `../templates/shop.html?categoryId=${category.id}`;
-    categoryTag.className = 'dropdown-item';
+    categoryTag.className = "dropdown-item";
     categoryTag.textContent = `${category.name}`;
     categoryContainer.appendChild(categoryTag);
   });
+}
+
+function searchProductsHeader(event) {
+  if (event.key === "Enter") {
+    let promp = document.getElementById("searchHeader").value.toLowerCase();
+    searching(promp);
+  }
+}
+
+function searchProducts() {
+  let promp = document.getElementById("searchBody").value.toLowerCase();
+  searching(promp);
+}
+
+function searching(promp){
+  window.location.href = `./shop.html?searchPromp=${promp}`;
 }

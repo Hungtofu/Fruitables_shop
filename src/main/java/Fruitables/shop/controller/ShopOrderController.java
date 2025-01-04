@@ -4,6 +4,7 @@ import Fruitables.shop.dto.OrderHistoryDTO;
 import Fruitables.shop.dto.ShopOrderDTO;
 import Fruitables.shop.dto.ShopOrderItemDTO;
 import Fruitables.shop.entity.Product;
+import Fruitables.shop.payload.Request.Payment2Request;
 import Fruitables.shop.payload.Request.PaymentRequest;
 import Fruitables.shop.service.CartService;
 import Fruitables.shop.service.ProductService;
@@ -47,6 +48,15 @@ public class ShopOrderController {
 
     @PostMapping("/add_order")
     public ResponseEntity<?> addShopOrder(@RequestBody PaymentRequest request) {
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
+        if (email.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK.value()).body(null);
+        }
+        boolean success = shopOrderService.createShopOrderFromCart(email, request);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(success);
+    }
+    @PostMapping("/checkout")
+    public ResponseEntity<?> addShopOrder(@RequestBody Payment2Request request) {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
         if (email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK.value()).body(null);

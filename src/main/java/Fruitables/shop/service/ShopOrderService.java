@@ -2,6 +2,7 @@ package Fruitables.shop.service;
 
 import Fruitables.shop.dto.*;
 import Fruitables.shop.entity.*;
+import Fruitables.shop.payload.Request.Payment2Request;
 import Fruitables.shop.payload.Request.PaymentRequest;
 import Fruitables.shop.repository.*;
 import org.springframework.stereotype.Service;
@@ -132,6 +133,65 @@ public class ShopOrderService {
                 currentShopOrder.setOrderDate(Timestamp.from(Instant.now()));
                 currentShopOrder.setPaymentMethod(userPaymentMethodRepo.findById(request.getUserPaymentMethodId()));
                 currentShopOrder.setShippingAddress(deliveryInformationRepository.findById(request.getShippingAddressId()));
+                currentShopOrder.setShippingMethod(shippingMethodRepository.findById(request.getShippingMethodId()));
+                currentShopOrder.setOrderStatus(orderStatusRepository.findById(request.getOrderStatusId()));
+                shopOrderRepository.save(currentShopOrder);
+                for (CartItem c : cartItemList) {
+                    Product product = productRepository.findById(c.getProduct().getId());
+                    if (product.getQtyInStock() - c.getQty() >= 0) {
+                        ShopOrderItem shopOrderItem = new ShopOrderItem();
+
+                        shopOrderItem.setShopOrder(currentShopOrder);
+                        shopOrderItem.setQty(c.getQty());
+                        shopOrderItem.setProduct(c.getProduct());
+                        shopOrderItem.setPrice(c.getProduct().getPrice() * c.getQty());
+
+                        product.setQtyInStock(product.getQtyInStock() - c.getQty());
+                        total = c.getQty()*c.getProduct().getPrice();
+
+                        shopOrderItemRepository.save(shopOrderItem);
+                        productRepository.save(product);
+                    }
+                    cartItemRepository.delete(c);
+                }
+
+                currentShopOrder.setOrderTotal(total + currentShopOrder.getShippingMethod().getPrice());
+                shopOrderRepository.save(currentShopOrder);
+                return true;
+            }
+            return false;
+        } catch (Exception e){
+            System.out.println("Erorr payment: " + e.getMessage());
+        }
+        return false;
+
+    }
+    public boolean createShopOrderFromCart(String email, Payment2Request request)
+    {
+        try {
+            User user = userService.findByEmail(email);
+            Cart cart = cartRepository.findByUser(user);
+            double total = 0.0;
+            List<CartItem> cartItemList = cartItemRepository.findByCart(cart);
+            if (cartItemList != null) {
+                ShopOrder currentShopOrder = new ShopOrder();
+                currentShopOrder.setUser(user);
+                currentShopOrder.setOrderDate(Timestamp.from(Instant.now()));
+                currentShopOrder.setPaymentMethod(userPaymentMethodRepo.findById(request.getUserPaymentMethodId()));
+
+                DeliveryInformation newDI = new DeliveryInformation();
+                newDI.setUser(user);
+                newDI.setFirstName(request.getDeliveryInfomation().getFirstName());
+                newDI.setLastName(request.getDeliveryInfomation().getLastName());
+                newDI.setPhoneNumbers(request.getDeliveryInfomation().getPhoneNumbers());
+                newDI.setAddress1(request.getDeliveryInfomation().getAddress1());
+                newDI.setAddress2(request.getDeliveryInfomation().getAddress2());
+                newDI.setCommune(request.getDeliveryInfomation().getCommune());
+                newDI.setDistrict(request.getDeliveryInfomation().getDistrict());
+                newDI.setProvince(request.getDeliveryInfomation().getProvince());
+                newDI = deliveryInformationRepository.save(newDI);
+                currentShopOrder.setShippingAddress(newDI);
+
                 currentShopOrder.setShippingMethod(shippingMethodRepository.findById(request.getShippingMethodId()));
                 currentShopOrder.setOrderStatus(orderStatusRepository.findById(request.getOrderStatusId()));
                 shopOrderRepository.save(currentShopOrder);

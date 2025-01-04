@@ -142,9 +142,6 @@ function addToCart(event) {
   var accessToken = localStorage.getItem("accessToken");
 
   var response = fetchAdtoCart(productId, accessToken, qty);
-  if (response.statusCode != 200) {
-    alert("require signin for purchase!");
-  }
 }
 
 async function fetchAdtoCart(productId, token, qty) {
@@ -163,10 +160,13 @@ async function fetchAdtoCart(productId, token, qty) {
     });
     const data = await response.json();
     if (data.statusCode == 200) {
+      alert("add successfully")
       return data;
-    } else {
-      return null;
     }
+    if (data.statusCode == 401) {
+      alert("require signin for purchase!");
+    }
+    return null;
   } catch (error) {
     return null;
   }
